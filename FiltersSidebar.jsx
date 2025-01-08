@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { vehicles } from "../data/vehicles"; // Import the vehicle data
 
-// Sample data for filtering options (you can import this from vehicles.js if needed)
+// Sample data for filtering options
 const carCompanies = [
     "McLaren",
     "Porsche",
@@ -30,9 +30,17 @@ const transmissions = ["Automatic", "Manual"];
 const carTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
 
 const FiltersSidebar = ({ onFilterChange }) => {
+    const [priceRange, setPriceRange] = useState(0); // State to track the price range
+
+    const handlePriceChange = (e) => {
+        const value = e.target.value;
+        setPriceRange(value); // Update the state with the current value
+        onFilterChange("priceRange", value); // Call the filter change handler
+    };
+
     return (
         <div className="bg-white shadow-md rounded-lg p-4 w-80">
-            <h2 className="text-lg font-bold mb-4">Filters</h2>
+            <h2 className="text-xl font-bold mb-4">Filters</h2>
 
             <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
@@ -51,20 +59,38 @@ const FiltersSidebar = ({ onFilterChange }) => {
                 </select>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 relative">
                 <label className="block text-sm font-medium mb-2">
                     Price Range
                 </label>
                 <input
                     type="range"
                     min="0"
-                    max="1000"
-                    onChange={(e) =>
-                        onFilterChange("priceRange", e.target.value)
-                    }
+                    max="5000"
+                    value={priceRange} // Set the current value
+                    onChange={handlePriceChange} // Update the state on change
                     className="w-full"
                 />
-                <span className="text-sm">Max Price: ${1000}</span>
+                <div
+                    className="absolute -top-2 transform -translate-x-1/2"
+                    style={{ left: `${(priceRange / 5000) * 100}%` }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-mint-500" // Adjust the color as needed
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 11h18l-1.5 6H4.5L3 11zM3 11l1.5-4.5h15L21 11M3 11v6a2 2 0 002 2h12a2 2 0 002-2v-6"
+                        />
+                    </svg>
+                </div>
+                <span className="text-sm">Current Price: ${priceRange}</span>
             </div>
 
             <div className="mb-4">
@@ -124,3 +150,4 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
