@@ -106,12 +106,12 @@ const Login = () => {
                                 </label>
                             </div>
                             <div>
-                                <a
-                                    href="#"
+                                <button
+                                    onClick={() => navigate("/forgot-password")}
                                     className="text-indigo-400 hover:text-indigo-300 text-sm"
                                 >
                                     Forgot Password?
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -134,18 +134,6 @@ const Login = () => {
                                 Sign up
                             </button>
                         </div>
-
-                        <div className="text-center mt-4">
-                            <span className="text-gray-400">
-                                Forgot your password?{" "}
-                            </span>
-                            <button
-                                onClick={() => navigate("/forgot-password")}
-                                className="text-indigo-400 hover:text-indigo-300 font-semibold"
-                            >
-                                Reset it
-                            </button>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -154,4 +142,5 @@ const Login = () => {
 };
 
 export default Login;
+
 
