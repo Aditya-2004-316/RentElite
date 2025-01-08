@@ -4,9 +4,11 @@ import FiltersSidebar from "./FiltersSidebar";
 
 const Dashboard = () => {
     const [filters, setFilters] = useState({
-        carType: "",
+        company: "",
         priceRange: "",
-        availability: "",
+        fuelType: "",
+        transmission: "",
+        carType: "",
     });
 
     const handleFilterChange = (filterName, value) => {
@@ -21,7 +23,7 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen bg-lime-500">
             <Navbar />
-            <div className="flex">
+            <div className="flex h-[calc(100vh-80px)]">
                 <FiltersSidebar onFilterChange={handleFilterChange} />
                 <div className="flex-grow p-4">
                     <h1 className="text-4xl font-bold text-white mb-4">
@@ -34,5 +36,6 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
