@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { vehicles } from "../data/vehicles"; // Import the vehicle data
+import CustomCarIcon from "../assets/icons/car-icon.png"; // Adjust the path as necessary
 
 // Sample data for filtering options
 const carCompanies = [
@@ -75,20 +76,11 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     className="absolute -top-2 transform -translate-x-1/2"
                     style={{ left: `${(priceRange / 5000) * 100}%` }}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-mint-500" // Adjust the color as needed
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 11h18l-1.5 6H4.5L3 11zM3 11l1.5-4.5h15L21 11M3 11v6a2 2 0 002 2h12a2 2 0 002-2v-6"
-                        />
-                    </svg>
+                    <img
+                        src={CustomCarIcon}
+                        alt="Car Icon"
+                        className="h-6 w-6" // Adjust size as needed
+                    />
                 </div>
                 <span className="text-sm">Current Price: ${priceRange}</span>
             </div>
@@ -150,4 +142,5 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
 
