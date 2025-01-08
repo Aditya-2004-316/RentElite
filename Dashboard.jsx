@@ -21,12 +21,15 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-lime-500">
+        <div className="min-h-screen" style={{ backgroundColor: "#ccf2e3" }}>
             <Navbar />
             <div className="flex h-[calc(100vh-80px)]">
-                <FiltersSidebar onFilterChange={handleFilterChange} />
+                <FiltersSidebar
+                    onFilterChange={handleFilterChange}
+                    // className="mt-4"
+                />
                 <div className="flex-grow p-4">
-                    <h1 className="text-4xl font-bold text-white mb-4">
+                    <h1 className="text-4xl font-bold text-black mb-4">
                         Dashboard
                     </h1>
                 </div>
@@ -36,6 +39,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
 
