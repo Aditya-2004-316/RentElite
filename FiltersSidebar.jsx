@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { vehicles } from "../data/vehicles"; // Import the vehicle data
-import CustomCarIcon from "../assets/icons/car-icon.png"; // Adjust the path as necessary
 import { FaSearch } from "react-icons/fa"; // Importing the magnifying glass icon from react-icons
+import { FaDollarSign } from "react-icons/fa"; // Importing a dollar sign icon for the slider
 
 // Sample data for filtering options
 const carCompanies = [
@@ -113,23 +113,41 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     max="5000"
                     value={priceRange} // Set the current value
                     onChange={handlePriceChange} // Update the state on change
-                    className="w-full"
+                    className="w-full appearance-none h-2" // Custom styles for the slider
+                    style={{ background: "#ccf2e3" }} // Set the background color to match your website's color scheme
                 />
+                <span className="text-sm mt-2">
+                    Current Price: ${priceRange}
+                </span>
+                <style>
+                    {`
+                        input[type="range"] {
+                            -webkit-appearance: none; /* Override default CSS styles */
+                            appearance: none; /* Override default CSS styles */
+                        }
+                        input[type="range"]::-webkit-slider-thumb {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            width: 24px; /* Width of the custom icon */
+                            height: 24px; /* Height of the custom icon */
+                            background: transparent; /* Make the background transparent */
+                            cursor: pointer;
+                            margin-top: -11px; /* Adjust to center the icon */
+                        }
+                        input[type="range"]::-moz-range-thumb {
+                            width: 24px; /* Width of the custom icon */
+                            height: 24px; /* Height of the custom icon */
+                            background: transparent; /* Make the background transparent */
+                            cursor: pointer;
+                        }
+                    `}
+                </style>
                 <div
-                    className="absolute"
-                    style={{
-                        left: `${(priceRange / 5000) * 100}%`,
-                        top: "-12px",
-                        transform: "translateX(-50%)",
-                    }}
+                    className="absolute top-10 left-0 transform -translate-x-1/2"
+                    style={{ left: `${(priceRange / 5000) * 100}%` }} // Position the icon based on the slider value
                 >
-                    <img
-                        src={CustomCarIcon}
-                        alt="Car Icon"
-                        className="h-8 w-8" // Adjust size as needed (increase size for better visibility)
-                    />
+                    <FaDollarSign className="text-green-500" />
                 </div>
-                <span className="text-sm">Current Price: ${priceRange}</span>
             </div>
 
             <div className="mb-4">
@@ -189,6 +207,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
 
 
 
