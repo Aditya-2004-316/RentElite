@@ -71,14 +71,33 @@ const Dashboard = () => {
     });
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: "#ccf2e3" }}>
-            <Navbar />
-            <div className="flex h-[calc(100vh-80px)]">
-                <FiltersSidebar
-                    onFilterChange={handleFilterChange}
-                    // className="mt-4"
-                />
-                <div className="flex-grow p-4">
+        <div
+            className="min-h-screen flex flex-col"
+            style={{ backgroundColor: "#ccf2e3" }}
+        >
+            <div
+                className="fixed top-0 left-0 right-0 z-10"
+                style={{ height: "60px", width: "100%", marginBottom: "20px" }}
+            >
+                <Navbar />
+            </div>
+            <div className="flex" style={{ marginTop: "60px" }}>
+                <div
+                    className="fixed bottom-0 left-0 h-[calc(100vh-105px)] w-80 z-10"
+                    style={{ overflow: "hidden" }}
+                >
+                    <FiltersSidebar
+                        onFilterChange={handleFilterChange}
+                        className="mt-4"
+                    />
+                </div>
+                <div
+                    className="flex-grow ml-80 p-4"
+                    style={{
+                        height: "calc(100vh - 60px)",
+                        overflowY: "auto",
+                    }}
+                >
                     <div className="mb-8">
                         <h2 className="text-4xl font-bold mb-6 flex items-center text-black">
                             <FaStar className="mr-2 text-yellow-500" />
@@ -190,6 +209,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
 
