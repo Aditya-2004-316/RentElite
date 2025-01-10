@@ -93,10 +93,7 @@ const Dashboard = () => {
                 </div>
                 <div
                     className="flex-grow ml-80 p-4"
-                    style={{
-                        height: "calc(100vh - 60px)",
-                        overflowY: "auto",
-                    }}
+                    style={{ marginTop: "20px" }}
                 >
                     <div className="mb-8">
                         <h2 className="text-4xl font-bold mb-6 flex items-center text-black">
@@ -121,12 +118,17 @@ const Dashboard = () => {
                                         <p className="text-gray-600 mb-2">
                                             {car.type}
                                         </p>
-                                        <p className="text-2xl font-bold mb-4">
-                                            ${car.price}/day
-                                        </p>
-                                        <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                                            Book Now
-                                        </button>
+                                        <div className="flex justify-between items-center">
+                                            <p
+                                                className="text-2xl font-bold"
+                                                style={{ color: "#0fa16d" }}
+                                            >
+                                                ${car.price}
+                                            </p>
+                                            <button className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600">
+                                                Book Now
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -156,12 +158,17 @@ const Dashboard = () => {
                                         <p className="text-gray-600 mb-2">
                                             {car.type}
                                         </p>
-                                        <p className="text-2xl font-bold mb-4">
-                                            ${car.price}/day
-                                        </p>
-                                        <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                                            Book Now
-                                        </button>
+                                        <div className="flex justify-between items-center">
+                                            <p
+                                                className="text-2xl font-bold"
+                                                style={{ color: "#0fa16d" }}
+                                            >
+                                                ${car.price}
+                                            </p>
+                                            <button className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600">
+                                                Book Now
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -191,12 +198,17 @@ const Dashboard = () => {
                                         <p className="text-gray-600 mb-2">
                                             {car.type}
                                         </p>
-                                        <p className="text-2xl font-bold mb-4">
-                                            ${car.price}/day
-                                        </p>
-                                        <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                                            Book Now
-                                        </button>
+                                        <div className="flex justify-between items-center">
+                                            <p
+                                                className="text-2xl font-bold"
+                                                style={{ color: "#0fa16d" }}
+                                            >
+                                                ${car.price}
+                                            </p>
+                                            <button className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600">
+                                                Book Now
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -209,6 +221,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
 
