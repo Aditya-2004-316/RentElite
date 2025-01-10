@@ -3,6 +3,7 @@ import Login from "./components/Login"; // Ensure this import matches your file 
 import SignUp from "./components/SignUp"; // Import the SignUp component
 import ForgotPassword from "./components/ForgotPassword"; // Import the ForgotPassword component
 import Dashboard from "./components/Dashboard"; // Import the Dashboard component
+import Profile from "./components/Profile";
 
 const App = () => {
     return (
@@ -19,10 +20,12 @@ const App = () => {
                 {/* Add Forgot Password route */}
                 <Route path="/dashboard" element={<Dashboard />} />{" "}
                 {/* Add Dashboard route */}
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </Router>
     );
 };
 
 export default App;
+
 
