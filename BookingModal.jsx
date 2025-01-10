@@ -9,6 +9,21 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
         onConfirm({ car, rentalDuration });
     };
 
+    // List of cars that need object-contain
+    const carsNeedingContain = [
+        "Ferrari SF90 Stradale",
+        "Maserati MC20",
+        "Porsche Taycan Turbo S",
+        "Pininfarina Battista",
+        "Aston Martin DBS",
+        "Lexus LC 500",
+    ];
+
+    // Determine if current car needs object-contain
+    const imageObjectFit = carsNeedingContain.includes(car.name)
+        ? "object-contain"
+        : "object-cover";
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg w-[86%] h-[86vh] overflow-hidden flex">
@@ -17,7 +32,7 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                     <img
                         src={car.image}
                         alt={car.name}
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full ${imageObjectFit}`}
                         style={{
                             maxWidth: "100%",
                             maxHeight: "100%",
@@ -81,3 +96,4 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
+
