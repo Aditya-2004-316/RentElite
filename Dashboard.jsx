@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { FaStar, FaRegClock, FaCar } from "react-icons/fa";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
+import CarImageModal from "./CarImageModal";
 import { vehicles } from "../data/vehicles";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
     const [filters, setFilters] = useState({
@@ -13,6 +15,10 @@ const Dashboard = () => {
         carType: "",
     });
 
+    const [selectedCar, setSelectedCar] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
+
     const handleFilterChange = (filterName, value) => {
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -20,6 +26,21 @@ const Dashboard = () => {
         }));
         // Here you can add logic to filter the car listings based on the selected filters
         console.log("Current filters:", { ...filters, [filterName]: value });
+    };
+
+    const handleCarClick = (car) => {
+        setSelectedCar(car);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedCar(null);
+    };
+
+    const handleBooking = (car) => {
+        // Navigate to the Bookings page with the selected car details
+        navigate("/bookings", { state: { car } });
     };
 
     // Define the cars for each section
@@ -58,17 +79,6 @@ const Dashboard = () => {
     const otherOptionsCars = vehicles.filter(
         (car) => !includedCarIds.has(car.id)
     );
-
-    // Remove duplicates from otherOptionsCars based on name
-    const uniqueOtherOptionsCars = [];
-    const seenCars = new Set();
-
-    otherOptionsCars.forEach((car) => {
-        if (!seenCars.has(car.name)) {
-            seenCars.add(car.name);
-            uniqueOtherOptionsCars.push(car);
-        }
-    });
 
     return (
         <div
@@ -109,7 +119,8 @@ const Dashboard = () => {
                                     <img
                                         src={car.image}
                                         alt={car.name}
-                                        className="w-full h-48 object-cover"
+                                        className="w-full h-48 object-cover cursor-pointer"
+                                        onClick={() => handleCarClick(car)}
                                     />
                                     <div className="p-4">
                                         <h3 className="text-lg font-semibold mb-2">
@@ -125,7 +136,12 @@ const Dashboard = () => {
                                             >
                                                 ${car.price}
                                             </p>
-                                            <button className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600">
+                                            <button
+                                                className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600"
+                                                onClick={() =>
+                                                    handleBooking(car)
+                                                }
+                                            >
                                                 Book Now
                                             </button>
                                         </div>
@@ -149,7 +165,8 @@ const Dashboard = () => {
                                     <img
                                         src={car.image}
                                         alt={car.name}
-                                        className="w-full h-48 object-cover"
+                                        className="w-full h-48 object-cover cursor-pointer"
+                                        onClick={() => handleCarClick(car)}
                                     />
                                     <div className="p-4">
                                         <h3 className="text-lg font-semibold mb-2">
@@ -165,7 +182,12 @@ const Dashboard = () => {
                                             >
                                                 ${car.price}
                                             </p>
-                                            <button className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600">
+                                            <button
+                                                className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600"
+                                                onClick={() =>
+                                                    handleBooking(car)
+                                                }
+                                            >
                                                 Book Now
                                             </button>
                                         </div>
@@ -189,7 +211,8 @@ const Dashboard = () => {
                                     <img
                                         src={car.image}
                                         alt={car.name}
-                                        className="w-full h-48 object-cover"
+                                        className="w-full h-48 object-cover cursor-pointer"
+                                        onClick={() => handleCarClick(car)}
                                     />
                                     <div className="p-4">
                                         <h3 className="text-lg font-semibold mb-2">
@@ -205,7 +228,12 @@ const Dashboard = () => {
                                             >
                                                 ${car.price}
                                             </p>
-                                            <button className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600">
+                                            <button
+                                                className="bg-[#0fa16d] text-white py-1 px-3 rounded hover:bg-green-600"
+                                                onClick={() =>
+                                                    handleBooking(car)
+                                                }
+                                            >
                                                 Book Now
                                             </button>
                                         </div>
@@ -216,18 +244,16 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {isModalOpen && selectedCar && (
+                <CarImageModal
+                    image={selectedCar.image}
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                />
+            )}
         </div>
     );
 };
 
 export default Dashboard;
-
-
-
-
-
-
-
-
-
-
