@@ -2,11 +2,20 @@ import React, { useState } from "react";
 
 const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
     const [rentalDuration, setRentalDuration] = useState(1);
+    const [scale, setScale] = useState(1);
 
     if (!isOpen) return null;
 
     const handleConfirm = () => {
         onConfirm({ car, rentalDuration });
+    };
+
+    const handleZoomIn = () => {
+        setScale((prevScale) => Math.min(prevScale + 0.1, 2)); // Max zoom 2x
+    };
+
+    const handleZoomOut = () => {
+        setScale((prevScale) => Math.max(prevScale - 0.1, 0.5)); // Min zoom 0.5x
     };
 
     // List of cars that need object-contain
@@ -26,20 +35,46 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg w-[86%] h-[86vh] overflow-hidden flex">
+            <div className="bg-white rounded-lg w-[86%] h-[86vh] overflow-hidden flex relative">
+                {/* Close button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors z-50 text-3xl"
+                >
+                    ×
+                </button>
+
                 {/* Left section - Car Image */}
-                <div className="w-[70%] p-4 bg-gray-100 flex items-center justify-center">
-                    <img
-                        src={car.image}
-                        alt={car.name}
-                        className={`w-full h-full ${imageObjectFit}`}
-                        style={{
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                            width: "100%",
-                            height: "100%",
-                        }}
-                    />
+                <div className="w-[70%] p-4 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+                    {/* Zoom controls */}
+                    <div className="absolute top-6 left-6 flex space-x-2 z-10">
+                        <button
+                            onClick={handleZoomIn}
+                            className="bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-gray-100 transition-colors"
+                        >
+                            +
+                        </button>
+                        <button
+                            onClick={handleZoomOut}
+                            className="bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-gray-100 transition-colors"
+                        >
+                            −
+                        </button>
+                    </div>
+                    <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                        <img
+                            src={car.image}
+                            alt={car.name}
+                            className={`w-full h-full ${imageObjectFit} transition-transform duration-200`}
+                            style={{
+                                maxWidth: "100%",
+                                maxHeight: "100%",
+                                width: "100%",
+                                height: "100%",
+                                transform: `scale(${scale})`,
+                            }}
+                        />
+                    </div>
                 </div>
 
                 {/* Right section - Car Information and Booking Details */}
@@ -96,4 +131,3 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
-
