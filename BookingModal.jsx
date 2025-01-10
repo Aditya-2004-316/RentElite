@@ -1,24 +1,48 @@
 import React, { useState } from "react";
+import {
+    FaCar,
+    FaTachometerAlt,
+    FaCogs,
+    FaGasPump,
+    FaUsers,
+    FaCalendarAlt,
+} from "react-icons/fa";
 
 const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
-    const [rentalDuration, setRentalDuration] = useState(1);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [scale, setScale] = useState(1);
 
     if (!isOpen) return null;
 
     const handleConfirm = () => {
-        onConfirm({ car, rentalDuration });
+        onConfirm({ car, startDate, endDate });
     };
 
     const handleZoomIn = () => {
-        setScale((prevScale) => Math.min(prevScale + 0.1, 2)); // Max zoom 2x
+        setScale((prevScale) => Math.min(prevScale + 0.1, 2));
     };
 
     const handleZoomOut = () => {
-        setScale((prevScale) => Math.max(prevScale - 0.1, 0.5)); // Min zoom 0.5x
+        setScale((prevScale) => Math.max(prevScale - 0.1, 0.5));
     };
 
-    // List of cars that need object-contain
+    // Calculate number of days between start and end date
+    const calculateDays = () => {
+        if (!startDate || !endDate) return 0;
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+    };
+
+    // Calculate total price
+    const calculateTotalPrice = () => {
+        const days = calculateDays();
+        return days * car.price;
+    };
+
     const carsNeedingContain = [
         "Ferrari SF90 Stradale",
         "Maserati MC20",
@@ -28,7 +52,6 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
         "Lexus LC 500",
     ];
 
-    // Determine if current car needs object-contain
     const imageObjectFit = carsNeedingContain.includes(car.name)
         ? "object-contain"
         : "object-cover";
@@ -39,7 +62,7 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors z-50 text-3xl"
+                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors z-50 text-xl font-bold"
                 >
                     ×
                 </button>
@@ -79,50 +102,95 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 
                 {/* Right section - Car Information and Booking Details */}
                 <div className="w-[30%] p-6 bg-gray-50 overflow-y-auto">
-                    <h2 className="text-2xl font-bold mb-4">{car.name}</h2>
-                    <div className="space-y-4">
-                        <div>
-                            <p className="text-gray-600">Type: {car.type}</p>
-                            <p className="text-gray-600">
-                                Price per day: ${car.price}
-                            </p>
-                        </div>
+                    {/* Car Name */}
+                    <h2 className="text-2xl font-bold mb-6">{car.name}</h2>
 
+                    {/* Car Details Grid */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="flex items-center gap-2">
+                            <FaCar className="text-gray-600" />
+                            <span>{car.type}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaGasPump className="text-gray-600" />
+                            <span>{car.fuelType}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaTachometerAlt className="text-gray-600" />
+                            <span>{car.topSpeed} mph</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaUsers className="text-gray-600" />
+                            <span>{car.seats} seats</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaCogs className="text-gray-600" />
+                            <span>{car.transmission}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <FaCalendarAlt className="text-gray-600" />
+                            <span>{car.year}</span>
+                        </div>
+                    </div>
+
+                    {/* Rental Duration */}
+                    <div className="space-y-4 mb-6">
+                        <h3 className="font-semibold">Rental Duration</h3>
                         <div>
-                            <label className="block text-gray-700 mb-2">
-                                Rental Duration (days):
+                            <label className="block text-gray-600 mb-1">
+                                Start Date
                             </label>
                             <input
-                                type="number"
-                                min="1"
-                                value={rentalDuration}
-                                onChange={(e) =>
-                                    setRentalDuration(Number(e.target.value))
-                                }
-                                className="border rounded px-3 py-2 w-full"
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="w-full border rounded-md p-2"
+                                min={new Date().toISOString().split("T")[0]}
                             />
                         </div>
-
-                        <div className="mt-4">
-                            <p className="text-lg font-semibold">
-                                Total Price: ${car.price * rentalDuration}
-                            </p>
+                        <div>
+                            <label className="block text-gray-600 mb-1">
+                                End Date
+                            </label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="w-full border rounded-md p-2"
+                                min={
+                                    startDate ||
+                                    new Date().toISOString().split("T")[0]
+                                }
+                            />
                         </div>
+                    </div>
 
-                        <div className="flex flex-col space-y-3 mt-6">
-                            <button
-                                onClick={handleConfirm}
-                                className="bg-[#0fa16d] text-white px-6 py-2 rounded hover:bg-green-600 w-full"
-                            >
-                                Confirm Booking
-                            </button>
-                            <button
-                                onClick={onClose}
-                                className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400 w-full"
-                            >
-                                Cancel
-                            </button>
-                        </div>
+                    {/* Total Price */}
+                    <div className="mb-6">
+                        <h3 className="font-semibold mb-2">Total Price</h3>
+                        <p className="text-2xl font-bold text-[#0fa16d]">
+                            ${calculateTotalPrice()}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                            {calculateDays()} days × ${car.price}/day
+                        </p>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex flex-col space-y-3">
+                        <button
+                            onClick={handleConfirm}
+                            className="bg-[#0fa16d] text-white px-6 py-2 rounded hover:bg-green-600 w-full"
+                            disabled={!startDate || !endDate}
+                        >
+                            Confirm Booking
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400 w-full"
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
             </div>
@@ -131,4 +199,3 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
-
