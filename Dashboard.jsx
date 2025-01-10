@@ -5,6 +5,7 @@ import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
 import { vehicles } from "../data/vehicles";
 import { useNavigate } from "react-router-dom";
+import BookingModal from "./BookingModal";
 
 const Dashboard = () => {
     const [filters, setFilters] = useState({
@@ -17,6 +18,8 @@ const Dashboard = () => {
 
     const [selectedCar, setSelectedCar] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [selectedBookingCar, setSelectedBookingCar] = useState(null);
     const navigate = useNavigate();
 
     const handleFilterChange = (filterName, value) => {
@@ -39,8 +42,21 @@ const Dashboard = () => {
     };
 
     const handleBooking = (car) => {
-        // Navigate to the Bookings page with the selected car details
-        navigate("/bookings", { state: { car } });
+        setSelectedBookingCar(car);
+        setIsBookingModalOpen(true);
+    };
+
+    const handleBookingConfirm = (bookingDetails) => {
+        // Here you can handle the booking confirmation
+        console.log("Booking confirmed:", bookingDetails);
+        // Add your booking logic here
+        setIsBookingModalOpen(false);
+        setSelectedBookingCar(null);
+    };
+
+    const handleBookingClose = () => {
+        setIsBookingModalOpen(false);
+        setSelectedBookingCar(null);
     };
 
     // Define the cars for each section
@@ -252,19 +268,17 @@ const Dashboard = () => {
                     onClose={closeModal}
                 />
             )}
+
+            {isBookingModalOpen && selectedBookingCar && (
+                <BookingModal
+                    car={selectedBookingCar}
+                    isOpen={isBookingModalOpen}
+                    onClose={handleBookingClose}
+                    onConfirm={handleBookingConfirm}
+                />
+            )}
         </div>
     );
 };
 
 export default Dashboard;
-
-
-
-
-
-
-
-
-
-
-
