@@ -16,6 +16,10 @@ const Navbar = () => {
         navigate("/");
     };
 
+    const handleProfileClick = () => {
+        navigate("/profile");
+    };
+
     return (
         <nav className="bg-gradient-to-r from-teal-800 to-emerald-600 shadow-lg">
             <div className="max-w-7xl mx-auto px-4">
@@ -68,3 +72,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
