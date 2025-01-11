@@ -1,84 +1,71 @@
 import React, { useState } from "react";
-import { vehicles } from "../data/vehicles"; // Import the vehicle data
-import { FaSearch } from "react-icons/fa"; // Importing the magnifying glass icon from react-icons
-import { FaDollarSign } from "react-icons/fa"; // Importing a dollar sign icon for the slider
-
-// Sample data for filtering options
-const carCompanies = [
-    "McLaren",
-    "Porsche",
-    "Mercedes",
-    "Audi",
-    "BMW",
-    "Ferrari",
-    "Lamborghini",
-    "Aston Martin",
-    "Rolls-Royce",
-    "Bentley",
-    "Maserati",
-    "Lexus",
-    "Bugatti",
-    "Pagani",
-    "Koenigsegg",
-    "Rimac",
-    "Lotus",
-];
+import { vehicles } from "../data/vehicles";
+import { FaSearch } from "react-icons/fa";
+import { FaDollarSign } from "react-icons/fa";
 
 const fuelTypes = ["Petrol", "Electric", "Hybrid"];
-
 const transmissions = ["Automatic", "Manual"];
 
 // Extract unique car types from vehicles data
 const carTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
 
+// Company name mappings
+const companyNameMappings = {
+    Mercedes: "Mercedes",
+    "Mercedes-AMG": "Mercedes",
+    "Mercedes-Maybach": "Mercedes",
+    Aston: "Aston Martin",
+};
+
 const FiltersSidebar = ({ onFilterChange }) => {
-    const [priceRange, setPriceRange] = useState(0); // State to track the price range
-    const [searchTerm, setSearchTerm] = useState(""); // State to track the search input
+    const [priceRange, setPriceRange] = useState(0);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const handlePriceChange = (e) => {
         const value = e.target.value;
-        setPriceRange(value); // Update the state with the current value
-        onFilterChange("priceRange", value); // Call the filter change handler
+        setPriceRange(value);
+        onFilterChange("priceRange", value);
     };
 
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value); // Update the search term state
+        setSearchTerm(e.target.value);
     };
 
     const handleSearch = () => {
-        // Implement search logic here if needed
         console.log("Searching for:", searchTerm);
-        // You can also call onFilterChange or any other function to filter results
     };
 
-    // Filter vehicle companies based on the search term
-    const filteredCompanies = vehicles
-        .map((vehicle) => vehicle.company) // Assuming vehicles have a 'company' property
-        .filter(
-            (company, index, self) => self.indexOf(company) === index && company // Ensure company is defined
-        )
-        .filter(
-            (company) =>
-                company &&
-                company.toLowerCase().includes(searchTerm.toLowerCase()) // Check if company is defined
-        );
+    // Get unique companies from vehicles data with proper naming
+    const filteredCompanies = [
+        ...new Set(
+            vehicles.map((vehicle) => {
+                const firstWord = vehicle.name.split(" ")[0];
+                return companyNameMappings[firstWord] || firstWord;
+            })
+        ),
+    ].sort();
+
+    // Filter companies based on search term
+    const searchFilteredCompanies = filteredCompanies.filter((company) =>
+        company.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="bg-white shadow-md rounded-lg p-4 w-80">
             <h2 className="text-2xl font-bold mb-4">Filters</h2>
 
-            {/* Search Input with Icon on the Right */}
+            {/* Search Input with Icon */}
             <div className="mb-4 relative">
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={handleSearchChange}
                     placeholder="Search by company..."
-                    className="border border-gray-300 rounded-lg w-full p-2 pr-10" // Added padding to the right for the icon
+                    className="border border-gray-300 rounded-lg w-full p-2 pr-10"
                 />
                 <FaSearch
-                    className="absolute right-3 top-2.5 text-gray-500 cursor-pointer" // Positioning the icon inside the input on the right
-                    onClick={handleSearch} // Optional: You can make the icon clickable to trigger search
+                    className="absolute right-3 top-2.5 text-gray-500 cursor-pointer"
+                    onClick={handleSearch}
                 />
             </div>
 
@@ -91,15 +78,11 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     className="border border-gray-300 rounded-lg w-full p-2"
                 >
                     <option value="">All</option>
-                    {filteredCompanies.length > 0 ? (
-                        filteredCompanies.map((company) => (
-                            <option key={company} value={company}>
-                                {company}
-                            </option>
-                        ))
-                    ) : (
-                        <option value="">No companies found</option>
-                    )}
+                    {searchFilteredCompanies.map((company) => (
+                        <option key={company} value={company}>
+                            {company}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -107,47 +90,63 @@ const FiltersSidebar = ({ onFilterChange }) => {
                 <label className="block text-lg font-medium mb-2">
                     Price Range
                 </label>
-                <input
-                    type="range"
-                    min="0"
-                    max="5000"
-                    value={priceRange} // Set the current value
-                    onChange={handlePriceChange} // Update the state on change
-                    className="w-full appearance-none h-2" // Custom styles for the slider
-                    style={{ background: "#ccf2e3" }} // Set the background color to match your website's color scheme
-                />
-                <span className="text-sm mt-2">
+                <div className="relative">
+                    <input
+                        type="range"
+                        min="0"
+                        max="5000"
+                        value={priceRange}
+                        onChange={handlePriceChange}
+                        className="w-full h-2 bg-[#ccf2e3] rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div
+                        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-10"
+                        style={{ left: `${(priceRange / 5000) * 100}%` }}
+                    >
+                        <FaDollarSign className="text-green-500" />
+                    </div>
+                </div>
+                <span className="text-sm mt-2 block">
                     Current Price: ${priceRange}
                 </span>
                 <style>
                     {`
                         input[type="range"] {
-                            -webkit-appearance: none; /* Override default CSS styles */
-                            appearance: none; /* Override default CSS styles */
+                            -webkit-appearance: none;
+                            appearance: none;
                         }
                         input[type="range"]::-webkit-slider-thumb {
                             -webkit-appearance: none;
                             appearance: none;
-                            width: 24px; /* Width of the custom icon */
-                            height: 24px; /* Height of the custom icon */
-                            background: transparent; /* Make the background transparent */
+                            width: 24px;
+                            height: 24px;
+                            background: transparent;
                             cursor: pointer;
-                            margin-top: -11px; /* Adjust to center the icon */
+                            margin-top: -8px;
+                            position: relative;
+                            z-index: 1;
                         }
                         input[type="range"]::-moz-range-thumb {
-                            width: 24px; /* Width of the custom icon */
-                            height: 24px; /* Height of the custom icon */
-                            background: transparent; /* Make the background transparent */
+                            width: 24px;
+                            height: 24px;
+                            background: transparent;
                             cursor: pointer;
+                            border: none;
+                            position: relative;
+                            z-index: 1;
+                        }
+                        input[type="range"]::-webkit-slider-runnable-track {
+                            height: 8px;
+                            background: #ccf2e3;
+                            border-radius: 4px;
+                        }
+                        input[type="range"]::-moz-range-track {
+                            height: 8px;
+                            background: #ccf2e3;
+                            border-radius: 4px;
                         }
                     `}
                 </style>
-                <div
-                    className="absolute top-10 left-0 transform -translate-x-1/2"
-                    style={{ left: `${(priceRange / 5000) * 100}%` }} // Position the icon based on the slider value
-                >
-                    <FaDollarSign className="text-green-500" />
-                </div>
             </div>
 
             <div className="mb-4">
@@ -207,7 +206,3 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
-
-
-
-
