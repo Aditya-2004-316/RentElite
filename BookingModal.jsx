@@ -211,3 +211,4 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 export default BookingModal;
 
 
+
