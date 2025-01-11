@@ -10,6 +10,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 212,
         },
     },
     {
@@ -23,6 +24,7 @@ export const vehicles = [
             transmission: "Manual",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 198,
         },
     },
     {
@@ -36,6 +38,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 193,
         },
     },
     {
@@ -49,6 +52,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 205,
         },
     },
     {
@@ -62,6 +66,7 @@ export const vehicles = [
             transmission: "Manual",
             fuel: "Petrol",
             seats: 4,
+            topSpeed: 180,
         },
     },
     {
@@ -75,6 +80,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 211,
         },
     },
     {
@@ -88,6 +94,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 202,
         },
     },
     {
@@ -101,6 +108,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 211,
         },
     },
     {
@@ -114,6 +122,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 4,
+            topSpeed: 155,
         },
     },
     {
@@ -127,6 +136,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 4,
+            topSpeed: 207,
         },
     },
     {
@@ -140,6 +150,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 202,
         },
     },
     {
@@ -153,6 +164,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 4,
+            topSpeed: 168,
         },
     },
     {
@@ -166,6 +178,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 261,
         },
     },
     {
@@ -179,6 +192,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 238,
         },
     },
     {
@@ -192,6 +206,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 300,
         },
     },
     {
@@ -205,6 +220,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 4,
+            topSpeed: 155,
         },
     },
     {
@@ -218,6 +234,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Electric",
             seats: 4,
+            topSpeed: 162,
         },
     },
     {
@@ -231,6 +248,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Hybrid",
             seats: 2,
+            topSpeed: 211,
         },
     },
     {
@@ -244,6 +262,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 250,
         },
     },
     {
@@ -257,6 +276,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 217,
         },
     },
     {
@@ -270,6 +290,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Hybrid",
             seats: 2,
+            topSpeed: 217,
         },
     },
     {
@@ -283,6 +304,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Electric",
             seats: 2,
+            topSpeed: 200,
         },
     },
     {
@@ -296,6 +318,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Hybrid",
             seats: 2,
+            topSpeed: 217,
         },
     },
     {
@@ -309,6 +332,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 4,
+            topSpeed: 198,
         },
     },
     {
@@ -322,6 +346,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Electric",
             seats: 2,
+            topSpeed: 258,
         },
     },
     {
@@ -335,6 +360,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 5,
+            topSpeed: 155,
         },
     },
     {
@@ -348,6 +374,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Petrol",
             seats: 2,
+            topSpeed: 211,
         },
     },
     {
@@ -361,6 +388,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Hybrid",
             seats: 2,
+            topSpeed: 220,
         },
     },
     {
@@ -374,6 +402,7 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Hybrid",
             seats: 2,
+            topSpeed: 219,
         },
     },
     {
@@ -387,6 +416,8 @@ export const vehicles = [
             transmission: "Automatic",
             fuel: "Electric",
             seats: 2,
+            topSpeed: 217,
         },
     },
 ];
+
