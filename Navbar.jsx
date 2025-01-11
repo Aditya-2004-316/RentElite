@@ -47,7 +47,7 @@ const Navbar = () => {
                             <FaHome className="text-2xl" /> Dashboard
                         </Link>
                         <Link
-                            to="/bookings"
+                            to="/my-bookings"
                             className="text-white hover:text-gray-200 flex items-center gap-3"
                         >
                             <FaHistory className="text-2xl" /> My Bookings
@@ -72,4 +72,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
