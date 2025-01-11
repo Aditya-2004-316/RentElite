@@ -61,3 +61,4 @@ const CarImageModal = ({ image, isOpen, onClose }) => {
 };
 
 export default CarImageModal;
+
