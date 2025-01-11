@@ -158,7 +158,7 @@ export const vehicles = [
         name: "Lexus LC 500",
         type: "Luxury Sports Car",
         price: 1100,
-        image: "https://www.thedrive.com/uploads/2023/04/08/lexus-lc-500-8-of-11.jpg?auto=webp&crop=16:9&auto=webp&optimize=high&quality=70&width=1440https://images.unsplash.com/photo-1545061371-c1b8608932c5?q=80&w=2070&auto=format&fit=crop",
+        image: "https://vossenwheels.com/wp-content/uploads/2019/10/Lexus-LC-500-Hybrid-Forged-Series-HF-1-%C2%A9-Vossen-Wheels-2019-0015.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -420,4 +420,5 @@ export const vehicles = [
         },
     },
 ];
+
 
