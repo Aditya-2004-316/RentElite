@@ -49,7 +49,7 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
         "Porsche Taycan Turbo S",
         "Pininfarina Battista",
         "Aston Martin DBS",
-        "Lexus LC 500",
+        // "Lexus LC 500",
     ];
 
     const imageObjectFit = carsNeedingContain.includes(car.name)
@@ -62,7 +62,7 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors z-50 text-xl font-bold"
+                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors z-50 text-3xl"
                 >
                     ×
                 </button>
@@ -113,23 +113,23 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                         </div>
                         <div className="flex items-center gap-2">
                             <FaGasPump className="text-gray-600" />
-                            <span>{car.fuelType}</span>
+                            <span>{car.specifications.fuel}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaTachometerAlt className="text-gray-600" />
-                            <span>{car.topSpeed} mph</span>
+                            <span>{car.specifications.topSpeed} mph</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaUsers className="text-gray-600" />
-                            <span>{car.seats} seats</span>
+                            <span>{car.specifications.seats} seats</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaCogs className="text-gray-600" />
-                            <span>{car.transmission}</span>
+                            <span>{car.specifications.transmission}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <FaCalendarAlt className="text-gray-600" />
-                            <span>{car.year}</span>
+                            <span>{car.specifications.year}</span>
                         </div>
                     </div>
 
@@ -171,9 +171,6 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                         <p className="text-2xl font-bold text-[#0fa16d]">
                             ${calculateTotalPrice()}
                         </p>
-                        <p className="text-sm text-gray-600">
-                            {calculateDays()} days × ${car.price}/day
-                        </p>
                     </div>
 
                     {/* Buttons */}
@@ -199,3 +196,4 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
+
