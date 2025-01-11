@@ -7,16 +7,29 @@ import {
     FaUsers,
     FaCalendarAlt,
 } from "react-icons/fa";
+import { useBookings } from "../context/BookingContext";
 
 const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [scale, setScale] = useState(1);
+    const { addBooking } = useBookings();
 
     if (!isOpen) return null;
 
     const handleConfirm = () => {
-        onConfirm({ car, startDate, endDate });
+        const newBooking = {
+            id: Date.now(), // unique ID for the booking
+            car,
+            startDate,
+            endDate,
+            totalPrice: calculateTotalPrice(),
+            bookingDate: new Date().toISOString(),
+        };
+
+        addBooking(newBooking);
+        onConfirm(newBooking);
+        onClose();
     };
 
     const handleZoomIn = () => {
@@ -196,4 +209,5 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
+
 
