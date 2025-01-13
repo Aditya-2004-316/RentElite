@@ -43,7 +43,7 @@ const Navbar = () => {
                     </div>
                     <div
                         className="flex items-center space-x-8"
-                        style={{ marginLeft: "20px" }}
+                        style={{ marginLeft: "40px" }}
                     >
                         <ul
                             style={{
@@ -53,7 +53,20 @@ const Navbar = () => {
                             }}
                             className="flex items-center"
                         >
-                            <li>
+                            <li style={{ margin: "0 25px" }}>
+                                <Link
+                                    to="/"
+                                    style={{
+                                        color:
+                                            location.pathname === "/"
+                                                ? "#FFD700"
+                                                : "white",
+                                        textDecoration: "none",
+                                    }}
+                                    className="flex items-center gap-3"
+                                ></Link>
+                            </li>
+                            <li style={{ margin: "0 25px" }}>
                                 <Link
                                     to="/dashboard"
                                     style={{
@@ -68,7 +81,7 @@ const Navbar = () => {
                                     <FaHistory className="text-2xl" /> Dashboard
                                 </Link>
                             </li>
-                            <li style={{ margin: "0 20px" }}>
+                            <li style={{ margin: "0 25px" }}>
                                 <Link
                                     to="/my-bookings"
                                     style={{
@@ -83,7 +96,7 @@ const Navbar = () => {
                                     <FaUser className="text-2xl" /> My Bookings
                                 </Link>
                             </li>
-                            <li style={{ margin: "0 20px" }}>
+                            <li style={{ margin: "0 25px" }}>
                                 <Link
                                     to="/profile"
                                     style={{
@@ -99,7 +112,7 @@ const Navbar = () => {
                                     Profile
                                 </Link>
                             </li>
-                            <li style={{ margin: "0 20px" }}>
+                            <li style={{ margin: "0 25px" }}>
                                 <Link
                                     to="/"
                                     style={{
@@ -123,4 +136,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
