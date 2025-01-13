@@ -41,7 +41,10 @@ const Navbar = () => {
                             </span>
                         </button>
                     </div>
-                    <div className="flex items-center space-x-8">
+                    <div
+                        className="flex items-center space-x-8"
+                        style={{ marginLeft: "20px" }}
+                    >
                         <ul
                             style={{
                                 listStyleType: "none",
@@ -65,7 +68,7 @@ const Navbar = () => {
                                     <FaHistory className="text-2xl" /> Dashboard
                                 </Link>
                             </li>
-                            <li style={{ margin: "0 15px" }}>
+                            <li style={{ margin: "0 20px" }}>
                                 <Link
                                     to="/my-bookings"
                                     style={{
@@ -80,7 +83,7 @@ const Navbar = () => {
                                     <FaUser className="text-2xl" /> My Bookings
                                 </Link>
                             </li>
-                            <li style={{ margin: "0 15px" }}>
+                            <li style={{ margin: "0 20px" }}>
                                 <Link
                                     to="/profile"
                                     style={{
@@ -96,7 +99,7 @@ const Navbar = () => {
                                     Profile
                                 </Link>
                             </li>
-                            <li style={{ margin: "0 15px" }}>
+                            <li style={{ margin: "0 20px" }}>
                                 <Link
                                     to="/"
                                     style={{
@@ -120,3 +123,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
