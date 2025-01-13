@@ -1,5 +1,6 @@
+import React from "react";
 import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
     FaHome,
     FaUser,
@@ -11,6 +12,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = () => {
         navigate("/");
@@ -40,30 +42,76 @@ const Navbar = () => {
                         </button>
                     </div>
                     <div className="flex items-center space-x-8">
-                        <Link
-                            to="/dashboard"
-                            className="text-white hover:text-gray-200 flex items-center gap-3"
+                        <ul
+                            style={{
+                                listStyleType: "none",
+                                padding: 0,
+                                margin: 0,
+                            }}
+                            className="flex items-center"
                         >
-                            <FaHome className="text-2xl" /> Dashboard
-                        </Link>
-                        <Link
-                            to="/my-bookings"
-                            className="text-white hover:text-gray-200 flex items-center gap-3"
-                        >
-                            <FaHistory className="text-2xl" /> My Bookings
-                        </Link>
-                        <Link
-                            to="/profile"
-                            className="text-white hover:text-gray-200 flex items-center gap-3"
-                        >
-                            <FaUser className="text-2xl" /> Profile
-                        </Link>
-                        <Link
-                            to="/"
-                            className="text-white hover:text-gray-200 flex items-center gap-3"
-                        >
-                            <FaSignOutAlt className="text-2xl" /> Logout
-                        </Link>
+                            <li>
+                                <Link
+                                    to="/dashboard"
+                                    style={{
+                                        color:
+                                            location.pathname === "/dashboard"
+                                                ? "#000000"
+                                                : "white",
+                                        textDecoration: "none",
+                                    }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <FaHistory className="text-2xl" /> Dashboard
+                                </Link>
+                            </li>
+                            <li style={{ margin: "0 15px" }}>
+                                <Link
+                                    to="/my-bookings"
+                                    style={{
+                                        color:
+                                            location.pathname === "/my-bookings"
+                                                ? "#000000"
+                                                : "white",
+                                        textDecoration: "none",
+                                    }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <FaUser className="text-2xl" /> My Bookings
+                                </Link>
+                            </li>
+                            <li style={{ margin: "0 15px" }}>
+                                <Link
+                                    to="/profile"
+                                    style={{
+                                        color:
+                                            location.pathname === "/profile"
+                                                ? "#000000"
+                                                : "white",
+                                        textDecoration: "none",
+                                    }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <FaSignOutAlt className="text-2xl" />{" "}
+                                    Profile
+                                </Link>
+                            </li>
+                            <li style={{ margin: "0 15px" }}>
+                                <Link
+                                    to="/"
+                                    style={{
+                                        color:
+                                            location.pathname === "/logout"
+                                                ? "#000000"
+                                                : "white",
+                                        textDecoration: "none",
+                                    }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <FaSignOutAlt className="text-2xl" /> Logout
+                                </Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -72,5 +120,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
