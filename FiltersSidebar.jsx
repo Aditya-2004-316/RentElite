@@ -9,46 +9,106 @@ const transmissions = ["Automatic", "Manual"];
 // Extract unique car types from vehicles data
 const carTypes = [...new Set(vehicles.map((vehicle) => vehicle.type))];
 
-// Company name mappings
-const companyNameMappings = {
-    Mercedes: "Mercedes",
-    "Mercedes-AMG": "Mercedes",
-    "Mercedes-Maybach": "Mercedes",
-    Aston: "Aston Martin",
-};
+// Extract unique companies and filter out any undefined values
+const companies = [
+    ...new Set(vehicles.map((vehicle) => vehicle.company).filter(Boolean)),
+];
 
 const FiltersSidebar = ({ onFilterChange }) => {
-    const [priceRange, setPriceRange] = useState(0);
+    const [selectedCompany, setSelectedCompany] = useState("");
+    const [selectedFuelType, setSelectedFuelType] = useState("");
+    const [selectedTransmission, setSelectedTransmission] = useState("");
+    const [selectedCarType, setSelectedCarType] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [priceRange, setPriceRange] = useState(5000);
 
-    const handlePriceChange = (e) => {
-        const value = e.target.value;
-        setPriceRange(value);
-        onFilterChange("priceRange", value);
+    // Filter companies based on the search term
+    const searchFilteredCompanies = companies.filter(
+        (company) =>
+            company && company.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Debugging: Log the companies and filtered companies
+    console.log("All Companies:", companies);
+    console.log("Filtered Companies:", searchFilteredCompanies);
+
+    const handleCompanyChange = (e) => {
+        const company = e.target.value;
+        setSelectedCompany(company);
+        onFilterChange({
+            company,
+            fuelType: selectedFuelType,
+            transmission: selectedTransmission,
+            carType: selectedCarType,
+            searchTerm,
+            priceRange,
+        });
+    };
+
+    const handleFuelTypeChange = (e) => {
+        const fuelType = e.target.value;
+        setSelectedFuelType(fuelType);
+        onFilterChange({
+            company: selectedCompany,
+            fuelType,
+            transmission: selectedTransmission,
+            carType: selectedCarType,
+            searchTerm,
+            priceRange,
+        });
+    };
+
+    const handleTransmissionChange = (e) => {
+        const transmission = e.target.value;
+        setSelectedTransmission(transmission);
+        onFilterChange({
+            company: selectedCompany,
+            fuelType: selectedFuelType,
+            transmission,
+            carType: selectedCarType,
+            searchTerm,
+            priceRange,
+        });
+    };
+
+    const handleCarTypeChange = (e) => {
+        const carType = e.target.value;
+        setSelectedCarType(carType);
+        onFilterChange({
+            company: selectedCompany,
+            fuelType: selectedFuelType,
+            transmission: selectedTransmission,
+            carType,
+            searchTerm,
+            priceRange,
+        });
     };
 
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
+        const term = e.target.value;
+        setSearchTerm(term);
+        onFilterChange({
+            company: selectedCompany,
+            fuelType: selectedFuelType,
+            transmission: selectedTransmission,
+            carType: selectedCarType,
+            searchTerm: term,
+            priceRange,
+        });
     };
 
-    const handleSearch = () => {
-        console.log("Searching for:", searchTerm);
+    const handlePriceChange = (e) => {
+        const price = e.target.value;
+        setPriceRange(price);
+        onFilterChange({
+            company: selectedCompany,
+            fuelType: selectedFuelType,
+            transmission: selectedTransmission,
+            carType: selectedCarType,
+            searchTerm,
+            priceRange: price,
+        });
     };
-
-    // Get unique companies from vehicles data with proper naming
-    const filteredCompanies = [
-        ...new Set(
-            vehicles.map((vehicle) => {
-                const firstWord = vehicle.name.split(" ")[0];
-                return companyNameMappings[firstWord] || firstWord;
-            })
-        ),
-    ].sort();
-
-    // Filter companies based on search term
-    const searchFilteredCompanies = filteredCompanies.filter((company) =>
-        company.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
         <div className="bg-white shadow-md rounded-lg p-4 w-80">
@@ -65,7 +125,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                 />
                 <FaSearch
                     className="absolute right-3 top-2.5 text-gray-500 cursor-pointer"
-                    onClick={handleSearch}
+                    // onClick={handleSearch}
                 />
             </div>
 
@@ -74,7 +134,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     Car Company
                 </label>
                 <select
-                    onChange={(e) => onFilterChange("company", e.target.value)}
+                    onChange={handleCompanyChange}
                     className="border border-gray-300 rounded-lg w-full p-2"
                 >
                     <option value="">All</option>
@@ -154,7 +214,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     Fuel Type
                 </label>
                 <select
-                    onChange={(e) => onFilterChange("fuelType", e.target.value)}
+                    onChange={handleFuelTypeChange}
                     className="border border-gray-300 rounded-lg w-full p-2"
                 >
                     <option value="">All</option>
@@ -171,9 +231,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     Transmission
                 </label>
                 <select
-                    onChange={(e) =>
-                        onFilterChange("transmission", e.target.value)
-                    }
+                    onChange={handleTransmissionChange}
                     className="border border-gray-300 rounded-lg w-full p-2"
                 >
                     <option value="">All</option>
@@ -190,7 +248,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     Car Type
                 </label>
                 <select
-                    onChange={(e) => onFilterChange("carType", e.target.value)}
+                    onChange={handleCarTypeChange}
                     className="border border-gray-300 rounded-lg w-full p-2"
                 >
                     <option value="">All</option>
@@ -206,3 +264,4 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
