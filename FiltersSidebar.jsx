@@ -28,10 +28,6 @@ const FiltersSidebar = ({ onFilterChange }) => {
             company && company.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Debugging: Log the companies and filtered companies
-    console.log("All Companies:", companies);
-    console.log("Filtered Companies:", searchFilteredCompanies);
-
     const handleCompanyChange = (e) => {
         const company = e.target.value;
         setSelectedCompany(company);
@@ -123,10 +119,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     placeholder="Search by company..."
                     className="border border-gray-300 rounded-lg w-full p-2 pr-10"
                 />
-                <FaSearch
-                    className="absolute right-3 top-2.5 text-gray-500 cursor-pointer"
-                    // onClick={handleSearch}
-                />
+                <FaSearch className="absolute right-3 top-2.5 text-gray-500 cursor-pointer" />
             </div>
 
             <div className="mb-4">
@@ -264,4 +257,5 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
 
