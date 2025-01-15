@@ -1,9 +1,20 @@
-import React from "react";
-import { useBookings } from "../context/BookingContext";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 
 const MyBookings = () => {
-    const { bookings, cancelBooking } = useBookings();
+    const [bookings, setBookings] = useState([]);
+
+    useEffect(() => {
+        const savedBookings =
+            JSON.parse(localStorage.getItem("bookings")) || [];
+        setBookings(savedBookings);
+    }, []);
+
+    const cancelBooking = (index) => {
+        const updatedBookings = bookings.filter((_, i) => i !== index);
+        setBookings(updatedBookings);
+        localStorage.setItem("bookings", JSON.stringify(updatedBookings));
+    };
 
     if (bookings.length === 0) {
         return (
@@ -23,39 +34,26 @@ const MyBookings = () => {
             <div className="container mx-auto px-4 py-8">
                 <h2 className="text-4xl font-bold mb-8">My Bookings</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {bookings.map((booking) => (
+                    {bookings.map((car, index) => (
                         <div
-                            key={booking.id}
-                            className="bg-white rounded-lg shadow-md overflow-hidden"
+                            key={index}
+                            className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105"
                         >
                             <img
-                                src={booking.car.image}
-                                alt={booking.car.name}
+                                src={car.image}
+                                alt={car.name}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="p-4">
                                 <h3 className="text-xl font-bold mb-2">
-                                    {booking.car.name}
+                                    {car.name}
                                 </h3>
-                                <div className="space-y-2 text-gray-600">
-                                    <p>
-                                        Start Date:{" "}
-                                        {new Date(
-                                            booking.startDate
-                                        ).toLocaleDateString()}
-                                    </p>
-                                    <p>
-                                        End Date:{" "}
-                                        {new Date(
-                                            booking.endDate
-                                        ).toLocaleDateString()}
-                                    </p>
-                                    <p className="font-semibold text-[#0fa16d]">
-                                        Total Price: ${booking.totalPrice}
-                                    </p>
-                                </div>
+                                <p className="text-gray-600 mb-2">{car.type}</p>
+                                <p className="text-[#0fa16d] font-bold text-lg">
+                                    ${car.price}/day
+                                </p>
                                 <button
-                                    onClick={() => cancelBooking(booking.id)}
+                                    onClick={() => cancelBooking(index)}
                                     className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
                                 >
                                     Cancel Booking
@@ -70,6 +68,3 @@ const MyBookings = () => {
 };
 
 export default MyBookings;
-
-
-
