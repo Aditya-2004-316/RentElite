@@ -20,7 +20,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
     const [selectedTransmission, setSelectedTransmission] = useState("");
     const [selectedCarType, setSelectedCarType] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-    const [priceRange, setPriceRange] = useState(5000);
+    const [priceRange, setPriceRange] = useState(0);
 
     // Filter companies based on the search term
     const searchFilteredCompanies = companies.filter(
@@ -147,14 +147,14 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     <input
                         type="range"
                         min="0"
-                        max="5000"
+                        max="600"
                         value={priceRange}
                         onChange={handlePriceChange}
                         className="w-full h-2 bg-[#ccf2e3] rounded-lg appearance-none cursor-pointer"
                     />
                     <div
                         className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-10"
-                        style={{ left: `${(priceRange / 5000) * 100}%` }}
+                        style={{ left: `${(priceRange / 600) * 100}%` }}
                     >
                         <FaDollarSign className="text-green-500" />
                     </div>
@@ -257,5 +257,3 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
-
-
