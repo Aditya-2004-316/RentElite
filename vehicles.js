@@ -19,7 +19,7 @@ export const vehicles = [
         name: "Porsche 911 GT3",
         type: "Sports Car",
         price: 120,
-        company: "Porche",
+        company: "Porsche",
         image: "https://www.authentic-roads.com/wp-content/uploads/2021/08/1-porsche-911-gt3-2021-rt-hero-front.jpg",
         specifications: {
             year: 2023,
@@ -124,7 +124,7 @@ export const vehicles = [
         name: "Rolls-Royce Phantom",
         type: "Ultra Luxury",
         price: 300,
-        company: "Rolls Royce",
+        company: "Rolls-Royce",
         image: "https://s1.cdn.autoevolution.com/images/gallery/ROLLS-ROYCE-Phantom-Coupe-5911_23.jpg",
         specifications: {
             year: 2023,
@@ -244,7 +244,7 @@ export const vehicles = [
         name: "Porsche Taycan Turbo S",
         type: "Electric Sports Car",
         price: 160,
-        company: "Porche",
+        company: "Porsche",
         image: "https://s1.cdn.autoevolution.com/images/news/gallery/porsche-taycan-turbo-s-looks-epic-in-mamba-green_8.jpg",
         specifications: {
             year: 2023,
@@ -379,7 +379,7 @@ export const vehicles = [
         name: "Rolls-Royce Cullinan",
         type: "Ultra Luxury SUV",
         price: 280,
-        company: "Rolls Royce",
+        company: "Rolls-Royce",
         image: "https://i.gaw.to/vehicles/photos/40/21/402185-2020-rolls-royce-cullinan.jpg",
         specifications: {
             year: 2023,
@@ -450,6 +450,3 @@ export const vehicles = [
         },
     },
 ];
-
-
-
