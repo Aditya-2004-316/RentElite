@@ -184,13 +184,19 @@ const Dashboard = () => {
                 <Navbar />
             </div>
             <div className="flex mt-24">
-                <div className="fixed bottom-0 left-0 h-[calc(100vh-105px)] w-80 z-10">
+                <div className="fixed bottom-0 left-0 h-[calc(100vh-105px)] w-72 z-10">
+                    {" "}
+                    {/* Adjusted width and margin */}
                     <FiltersSidebar onFilterChange={handleFilterChange} />
                 </div>
                 <div className="flex-grow ml-80 p-4">
+                    {" "}
+                    {/* Adjusted margin-left */}
                     {featuredCars.length > 0 && (
                         <>
-                            <h2 className="text-3xl font-bold mb-4 flex items-center">
+                            <h2 className="text-3xl font-bold mb-6 flex items-center">
+                                {" "}
+                                {/* Increased margin-bottom */}
                                 <FaStar className="mr-2 text-yellow-500" />{" "}
                                 Featured Cars
                             </h2>
@@ -201,7 +207,9 @@ const Dashboard = () => {
                     )}
                     {newArrivalCars.length > 0 && (
                         <>
-                            <h2 className="text-3xl font-bold mt-8 mb-4 flex items-center">
+                            <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
+                                {" "}
+                                {/* Increased margin-bottom */}
                                 <FaRegClock className="mr-2 text-blue-500" />{" "}
                                 New Arrivals
                             </h2>
@@ -212,7 +220,9 @@ const Dashboard = () => {
                     )}
                     {otherOptions.length > 0 && (
                         <>
-                            <h2 className="text-3xl font-bold mt-8 mb-4 flex items-center">
+                            <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
+                                {" "}
+                                {/* Increased margin-bottom */}
                                 <FaCar className="mr-2 text-green-500" /> Other
                                 Options
                             </h2>
