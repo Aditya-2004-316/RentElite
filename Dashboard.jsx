@@ -5,6 +5,9 @@ import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
 import { vehicles } from "../data/vehicles";
 import BookingModal from "./BookingModal";
+import MyBookings from "./MyBookings";
+import { useBookings } from "../context/BookingContext";
+import { v4 as uuidv4 } from "uuid";
 
 const companyNameMappings = {
     Mercedes: "Mercedes",
@@ -42,13 +45,7 @@ const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedBookingCar, setSelectedBookingCar] = useState(null);
-    const [bookings, setBookings] = useState([]);
-
-    useEffect(() => {
-        const savedBookings =
-            JSON.parse(localStorage.getItem("bookings")) || [];
-        setBookings(savedBookings);
-    }, []);
+    const { bookings, addBooking, cancelBooking } = useBookings();
 
     const handleFilterChange = (filters) => {
         let filtered = [...vehicles];
@@ -121,9 +118,15 @@ const Dashboard = () => {
     };
 
     const handleBookingConfirm = (bookingDetails) => {
-        const newBookings = [...bookings, selectedBookingCar];
-        setBookings(newBookings);
-        localStorage.setItem("bookings", JSON.stringify(newBookings));
+        const { startDate, endDate, totalPrice } = bookingDetails;
+        const newBooking = {
+            id: uuidv4(),
+            car: selectedBookingCar,
+            startDate,
+            endDate,
+            totalPrice,
+        };
+        addBooking(newBooking);
         setIsBookingModalOpen(false);
         setSelectedBookingCar(null);
     };
@@ -248,8 +251,65 @@ const Dashboard = () => {
                     onConfirm={handleBookingConfirm}
                 />
             )}
+            {/* <footer className="bg-gray-800 text-white py-8 mt-8">
+                <div className="container mx-auto text-center">
+                    <div className="flex flex-col md:flex-row justify-between items-center">
+                        <div className="mb-4 md:mb-0">
+                            &copy; {new Date().getFullYear()} Rent Elite. All
+                            rights reserved.
+                        </div>
+                        <div className="flex space-x-4">
+                            <a
+                                href="#"
+                                className="text-white hover:text-gray-400"
+                            >
+                                <FaFacebook size={24} />
+                            </a>
+                            <a
+                                href="#"
+                                className="text-white hover:text-gray-400"
+                            >
+                                <FaTwitter size={24} />
+                            </a>
+                            <a
+                                href="#"
+                                className="text-white hover:text-gray-400"
+                            >
+                                <FaInstagram size={24} />
+                            </a>
+                            <a
+                                href="#"
+                                className="text-white hover:text-gray-400"
+                            >
+                                <FaLinkedin size={24} />
+                            </a>
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <a
+                            href="#"
+                            className="text-white hover:text-gray-400 mx-2"
+                        >
+                            Privacy Policy
+                        </a>
+                        <a
+                            href="#"
+                            className="text-white hover:text-gray-400 mx-2"
+                        >
+                            Terms of Service
+                        </a>
+                        <a
+                            href="#"
+                            className="text-white hover:text-gray-400 mx-2"
+                        >
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </footer> */}
         </div>
     );
 };
 
 export default Dashboard;
+
