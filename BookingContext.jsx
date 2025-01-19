@@ -1,16 +1,31 @@
-import React, { createContext, useState, useContext } from "react";
+
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const BookingContext = createContext();
+
+export const useBookings = () => {
+    return useContext(BookingContext);
+};
 
 export const BookingProvider = ({ children }) => {
     const [bookings, setBookings] = useState([]);
 
+    useEffect(() => {
+        const savedBookings =
+            JSON.parse(localStorage.getItem("bookings")) || [];
+        setBookings(savedBookings);
+    }, []);
+
     const addBooking = (booking) => {
-        setBookings([...bookings, booking]);
+        const updatedBookings = [...bookings, booking];
+        setBookings(updatedBookings);
+        localStorage.setItem("bookings", JSON.stringify(updatedBookings));
     };
 
-    const cancelBooking = (bookingId) => {
-        setBookings(bookings.filter((booking) => booking.id !== bookingId));
+    const cancelBooking = (id) => {
+        const updatedBookings = bookings.filter((booking) => booking.id !== id);
+        setBookings(updatedBookings);
+        localStorage.setItem("bookings", JSON.stringify(updatedBookings));
     };
 
     return (
@@ -21,5 +36,3 @@ export const BookingProvider = ({ children }) => {
         </BookingContext.Provider>
     );
 };
-
-export const useBookings = () => useContext(BookingContext);
