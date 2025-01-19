@@ -62,7 +62,7 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
         "Porsche Taycan Turbo S",
         "Pininfarina Battista",
         "Aston Martin DBS",
-        // "Lexus LC 500",
+        "Lexus LC 500",
     ];
 
     const imageObjectFit = carsNeedingContain.includes(car.name)
@@ -209,6 +209,3 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
-
-
-
