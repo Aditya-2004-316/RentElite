@@ -5,7 +5,7 @@ export const vehicles = [
         type: "Supercar",
         price: 150,
         company: "Mclaren",
-        image: "https://www.topgear.com/sites/default/files/images/cars-road-test/2017/07/9329ff07c91832786835b0ce9c5c75fe/rh_720sweb-10.jpg",
+        image: "https://i.redd.it/ue7ixmwwu1p41.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -20,7 +20,7 @@ export const vehicles = [
         type: "Sports Car",
         price: 120,
         company: "Porsche",
-        image: "https://www.authentic-roads.com/wp-content/uploads/2021/08/1-porsche-911-gt3-2021-rt-hero-front.jpg",
+        image: "https://blogmedia.dealerfire.com/wp-content/uploads/sites/1149/2021/04/2022-porsche-911-gt3-white_o-1536x864.jpg",
         specifications: {
             year: 2023,
             transmission: "Manual",
@@ -35,7 +35,7 @@ export const vehicles = [
         type: "Luxury Sports Car",
         price: 130,
         company: "Mercedes",
-        image: "https://i.gaw.to/content/photos/25/38/253875_2017_Mercedes-Benz_AMG_GT.jpg",
+        image: "https://www.carscoops.com/wp-content/uploads/2020/07/2021-Mercedes-AMG-GT-Black-Series-4-1.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -50,7 +50,7 @@ export const vehicles = [
         type: "Supercar",
         price: 140,
         company: "Audi",
-        image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=2069&auto=format&fit=crop",
+        image: "https://cdn.motor1.com/images/mgl/VzM4p7/s1/audi-r8-japan-final-edition.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -65,7 +65,7 @@ export const vehicles = [
         type: "Sports Car",
         price: 100,
         company: "BMW",
-        image: "https://www.hdcarwallpapers.com/download/bmw_m4_csl_2022_4k-3840x2160.jpg",
+        image: "https://th.bing.com/th/id/R.0b0fc633eaebd5e8c8568fd6f210153a?rik=R%2f8Cf%2bsdrO4tDQ&riu=http%3a%2f%2fwww.automotiveaddicts.com%2fwp-content%2fuploads%2f2013%2f08%2fbmw-m4-coupe-concept.jpg&ehk=SkOq4etkC9ibTFcgAu4VHPwnYt5mb2kQBfp84ZVoXBY%3d&risl=&pid=ImgRaw&r=0",
         specifications: {
             year: 2023,
             transmission: "Manual",
@@ -125,7 +125,7 @@ export const vehicles = [
         type: "Ultra Luxury",
         price: 300,
         company: "Rolls-Royce",
-        image: "https://s1.cdn.autoevolution.com/images/gallery/ROLLS-ROYCE-Phantom-Coupe-5911_23.jpg",
+        image: "https://blog-cdn.el.olx.com.pk/wp-content/uploads/2022/08/25165341/Rolls-Royce-Phantom-Exterior-O.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -170,7 +170,7 @@ export const vehicles = [
         type: "Luxury Sports Car",
         price: 110,
         company: "Lexus",
-        image: "https://images4.alphacoders.com/880/thumb-1920-880187.jpg",
+        image: "https://www.carscoops.com/wp-content/uploads/2019/08/65de6963-2020-lexus-lc-500-inspiration-series-0.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -185,7 +185,7 @@ export const vehicles = [
         type: "Hypercar",
         price: 500,
         company: "Bugatti",
-        image: "https://media.evo.co.uk/image/private/s--julLt06a--/v1556217571/evo/2017/08/bugatti_chiron_front_three_quarter.jpg",
+        image: "https://luxurylaunches.com/wp-content/uploads/2019/09/Bugatti-Chiron-Super-Sport-300-1.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -200,7 +200,7 @@ export const vehicles = [
         type: "Hypercar",
         price: 450,
         company: "Pagani",
-        image: "https://images.unsplash.com/photo-1635974065147-4a72851190ef?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        image: "https://www.carscoops.com/wp-content/uploads/2021/01/Pagani-Huayra-BC-1a.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -230,7 +230,7 @@ export const vehicles = [
         type: "Ultra Luxury",
         price: 250,
         company: "Mercedes",
-        image: "https://s3.caradvice.com.au/wp-content/uploads/2015/01/15C2_331.jpg",
+        image: "https://media.ed.edmunds-media.com/mercedes-benz/maybach/2016/oem/2016_mercedes-benz_maybach_sedan_s600_fq_oem_15_1280.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -305,7 +305,7 @@ export const vehicles = [
         type: "Hybrid Hypercar",
         price: 400,
         company: "Mclaren",
-        image: "https://www.supercars.net/blog/wp-content/uploads/2018/09/26-McLaren-P1.jpg",
+        image: "https://i.pinimg.com/originals/2a/f5/7b/2af57be2efaf1fb67949e8ec14341b4a.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -320,7 +320,7 @@ export const vehicles = [
         type: "Electric Hypercar",
         price: 430,
         company: "Lotus",
-        image: "https://smartcdn.gprod.postmedia.digital/driving/wp-content/uploads/2022/10/LOT_0806_Fittipaldi_Evija-scaled.jpg",
+        image: "https://images.carexpert.com.au/resize/3000/-/app/uploads/2020/05/Lotus-Evija-CarExpert-Specification-13-1.jpeg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -335,7 +335,7 @@ export const vehicles = [
         type: "Hybrid Hypercar",
         price: 380,
         company: "Aston Martin",
-        image: "https://images.carexpert.com.au/resize/3000/-/app/uploads/2022/04/Valhalla-019.jpg",
+        image: "https://conteudo.imguol.com.br/c/entretenimento/4c/2019/08/01/aston-martin-valhalla-1564675346782_v2_1920x1279.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -350,7 +350,7 @@ export const vehicles = [
         type: "Ultra Luxury",
         price: 230,
         company: "Bentley",
-        image: "https://media.autoexpress.co.uk/image/private/s--Iy114UP0--/v1602666123/autoexpress/2020/10/Bentley%20Flying%20Spur%20V8%202020.jpg",
+        image: "https://cdn.motor1.com/images/mgl/eo6AA8/s1/2023-flying-spur-s-v8-1.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -365,7 +365,7 @@ export const vehicles = [
         type: "Electric Hypercar",
         price: 460,
         company: "Rimac",
-        image: "https://i.gaw.to/vehicles/photos/40/30/403015-2023-rimac-nevera.jpg",
+        image: "https://cdn.motor1.com/images/mgl/y228Mo/s1/2023-rimac-nevera-first-drive-review.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -380,7 +380,7 @@ export const vehicles = [
         type: "Ultra Luxury SUV",
         price: 280,
         company: "Rolls-Royce",
-        image: "https://i.gaw.to/vehicles/photos/40/21/402185-2020-rolls-royce-cullinan.jpg",
+        image: "https://autonxt.net/wp-content/uploads/2020/08/2020-Rolls-Royce-Cullinan16.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -395,7 +395,7 @@ export const vehicles = [
         type: "Grand Tourer",
         price: 260,
         company: "Ferrari",
-        image: "https://www.hdcarwallpapers.com/download/ferrari_812_competizione_2021_5k_3-2560x1440.jpg",
+        image: "https://autoinfo.co.th/uploads/2023/08/Ferrari-812-Novitec-tune-11.jpeg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -410,7 +410,7 @@ export const vehicles = [
         type: "Hybrid Supercar",
         price: 390,
         company: "Lamborghini",
-        image: "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=2071&auto=format&fit=crop",
+        image: "https://www.team-bhp.com/forum/attachments/international-automotive-scene/2130327d1615260294-lamborghini-sian-debuts-brands-1st-electrified-production-car-lamborghinisianinpurplegreenandwhitethreequarterabovephotobyjuanpablosaenz.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -440,7 +440,7 @@ export const vehicles = [
         type: "Electric Hypercar",
         price: 440,
         company: "Pininfarina",
-        image: "https://www.carscoops.com/wp-content/uploads/2020/02/Pininfarina-Battista-Test-Mule-00.jpg",
+        image: "https://automotiveblog.co.uk/wp-content/uploads/2021/10/Automobili-Pininfarinas-Battista-hyper-GT.jpg",
         specifications: {
             year: 2023,
             transmission: "Automatic",
@@ -450,3 +450,4 @@ export const vehicles = [
         },
     },
 ];
+
