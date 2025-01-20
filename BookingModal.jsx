@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     FaCar,
     FaTachometerAlt,
@@ -9,26 +9,53 @@ import {
 } from "react-icons/fa";
 import { useBookings } from "../context/BookingContext";
 
-const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+const BookingModal = ({
+    car,
+    isOpen,
+    onClose,
+    onConfirm,
+    onCancelBooking,
+    startDate,
+    endDate,
+    totalPrice,
+    isBookingView,
+}) => {
+    const [localStartDate, setLocalStartDate] = useState(startDate || "");
+    const [localEndDate, setLocalEndDate] = useState(endDate || "");
+    const [calculatedTotalPrice, setCalculatedTotalPrice] = useState(
+        totalPrice || 0
+    );
     const [scale, setScale] = useState(1);
     const { addBooking } = useBookings();
+
+    useEffect(() => {
+        setLocalStartDate(startDate || "");
+        setLocalEndDate(endDate || "");
+        setCalculatedTotalPrice(totalPrice || 0);
+    }, [startDate, endDate, totalPrice]);
+
+    useEffect(() => {
+        setCalculatedTotalPrice(
+            calculateTotalPrice(localStartDate, localEndDate, car.price)
+        );
+    }, [localStartDate, localEndDate, car.price]);
 
     if (!isOpen) return null;
 
     const handleConfirm = () => {
-        const newBooking = {
-            id: Date.now(), // unique ID for the booking
+        const bookingDetails = {
             car,
-            startDate,
-            endDate,
-            totalPrice: calculateTotalPrice(),
-            bookingDate: new Date().toISOString(),
+            startDate: localStartDate,
+            endDate: localEndDate,
+            totalPrice: calculatedTotalPrice,
         };
 
-        addBooking(newBooking);
-        onConfirm(newBooking);
+        onConfirm(bookingDetails);
+        onClose();
+    };
+
+    const handleCancelBooking = () => {
+        onCancelBooking();
         onClose();
     };
 
@@ -40,27 +67,26 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
         setScale((prevScale) => Math.max(prevScale - 0.1, 0.5));
     };
 
-    // Calculate number of days between start and end date
-    const calculateDays = () => {
-        if (!startDate || !endDate) return 0;
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const diffTime = Math.abs(end - start);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays;
-    };
-
-    // Calculate total price
-    const calculateTotalPrice = () => {
-        const days = calculateDays();
-        return days * car.price;
+    const calculateTotalPrice = (start, end, pricePerDay) => {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        if (isNaN(startDate) || isNaN(endDate) || startDate >= endDate) {
+            return 0;
+        }
+        const timeDiff = endDate - startDate;
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        return daysDiff * pricePerDay;
     };
 
     const carsNeedingContain = [
+        "Bugatti Chiron",
+        "Pagani Huayra",
         "Ferrari SF90 Stradale",
         "Maserati MC20",
         "Porsche Taycan Turbo S",
-        "Pininfarina Battista",
+        "Lamborghini Sián",
+        "Ferrari 812 Competizione",
+        "Audi R8",
         "Aston Martin DBS",
         "Lexus LC 500",
     ];
@@ -155,10 +181,13 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                             </label>
                             <input
                                 type="date"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
+                                value={localStartDate}
+                                onChange={(e) =>
+                                    setLocalStartDate(e.target.value)
+                                }
                                 className="w-full border rounded-md p-2"
                                 min={new Date().toISOString().split("T")[0]}
+                                disabled={isBookingView}
                             />
                         </div>
                         <div>
@@ -167,13 +196,16 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                             </label>
                             <input
                                 type="date"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
+                                value={localEndDate}
+                                onChange={(e) =>
+                                    setLocalEndDate(e.target.value)
+                                }
                                 className="w-full border rounded-md p-2"
                                 min={
-                                    startDate ||
+                                    localStartDate ||
                                     new Date().toISOString().split("T")[0]
                                 }
+                                disabled={isBookingView}
                             />
                         </div>
                     </div>
@@ -182,24 +214,33 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
                     <div className="mb-6">
                         <h3 className="font-semibold mb-2">Total Price</h3>
                         <p className="text-2xl font-bold text-[#0fa16d]">
-                            ${calculateTotalPrice()}
+                            ${calculatedTotalPrice}
                         </p>
                     </div>
 
                     {/* Buttons */}
                     <div className="flex flex-col space-y-3">
-                        <button
-                            onClick={handleConfirm}
-                            className="bg-[#0fa16d] text-white px-6 py-2 rounded hover:bg-green-600 w-full"
-                            disabled={!startDate || !endDate}
-                        >
-                            Confirm Booking
-                        </button>
+                        {isBookingView ? (
+                            <button
+                                onClick={handleCancelBooking}
+                                className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition-colors"
+                            >
+                                Cancel Booking
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleConfirm}
+                                className="bg-[#0fa16d] text-white px-6 py-2 rounded hover:bg-green-600 w-full"
+                                disabled={!localStartDate || !localEndDate}
+                            >
+                                Confirm Booking
+                            </button>
+                        )}
                         <button
                             onClick={onClose}
                             className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400 w-full"
                         >
-                            Cancel
+                            Exit
                         </button>
                     </div>
                 </div>
@@ -209,3 +250,4 @@ const BookingModal = ({ car, isOpen, onClose, onConfirm }) => {
 };
 
 export default BookingModal;
+
