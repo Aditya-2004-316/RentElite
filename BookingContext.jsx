@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const BookingContext = createContext();
@@ -36,3 +35,4 @@ export const BookingProvider = ({ children }) => {
         </BookingContext.Provider>
     );
 };
+
