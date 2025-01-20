@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useBookings } from "../context/BookingContext";
 import Navbar from "./Navbar";
+import BookingModal from "./BookingModal";
 
 const MyBookings = () => {
     const { bookings, cancelBooking } = useBookings();
+    const [selectedBooking, setSelectedBooking] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleCardClick = (booking) => {
+        setSelectedBooking(booking);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedBooking(null);
+    };
 
     if (bookings.length === 0) {
         return (
@@ -28,7 +41,8 @@ const MyBookings = () => {
                         .map((booking) => (
                             <div
                                 key={booking.id}
-                                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105"
+                                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105 cursor-pointer"
+                                onClick={() => handleCardClick(booking)}
                             >
                                 <img
                                     src={booking.car.image}
@@ -55,9 +69,10 @@ const MyBookings = () => {
                                         Total Price: ${booking.totalPrice}
                                     </p>
                                     <button
-                                        onClick={() =>
-                                            cancelBooking(booking.id)
-                                        }
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            cancelBooking(booking.id);
+                                        }}
                                         className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
                                     >
                                         Cancel Booking
@@ -67,8 +82,21 @@ const MyBookings = () => {
                         ))}
                 </div>
             </div>
+            {selectedBooking && (
+                <BookingModal
+                    car={selectedBooking.car}
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                    onCancelBooking={() => cancelBooking(selectedBooking.id)}
+                    startDate={selectedBooking.startDate}
+                    endDate={selectedBooking.endDate}
+                    totalPrice={selectedBooking.totalPrice}
+                    isBookingView={true}
+                />
+            )}
         </div>
     );
 };
 
 export default MyBookings;
+
