@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FaStar, FaRegClock, FaCar } from "react-icons/fa";
+import {
+    FaStar,
+    FaRegClock,
+    FaCar,
+    FaFacebook,
+    FaTwitter,
+    FaInstagram,
+    FaLinkedin,
+} from "react-icons/fa";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
@@ -195,43 +203,52 @@ const Dashboard = () => {
                 <div className="flex-grow ml-80 p-4">
                     {" "}
                     {/* Adjusted margin-left */}
-                    {featuredCars.length > 0 && (
+                    {filteredVehicles.length === 0 ? (
+                        <p className="text-gray-600 text-center">
+                            Sorry, there are no cars in this price range. Try
+                            searching for a different price range.
+                        </p>
+                    ) : (
                         <>
-                            <h2 className="text-3xl font-bold mb-6 flex items-center">
-                                {" "}
-                                {/* Increased margin-bottom */}
-                                <FaStar className="mr-2 text-yellow-500" />{" "}
-                                Featured Cars
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {renderVehicles(featuredCars)}
-                            </div>
-                        </>
-                    )}
-                    {newArrivalCars.length > 0 && (
-                        <>
-                            <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
-                                {" "}
-                                {/* Increased margin-bottom */}
-                                <FaRegClock className="mr-2 text-blue-500" />{" "}
-                                New Arrivals
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {renderVehicles(newArrivalCars)}
-                            </div>
-                        </>
-                    )}
-                    {otherOptions.length > 0 && (
-                        <>
-                            <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
-                                {" "}
-                                {/* Increased margin-bottom */}
-                                <FaCar className="mr-2 text-green-500" /> Other
-                                Options
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {renderVehicles(otherOptions)}
-                            </div>
+                            {featuredCars.length > 0 && (
+                                <>
+                                    <h2 className="text-3xl font-bold mb-6 flex items-center">
+                                        {" "}
+                                        {/* Increased margin-bottom */}
+                                        <FaStar className="mr-2 text-yellow-500" />{" "}
+                                        Featured Cars
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {renderVehicles(featuredCars)}
+                                    </div>
+                                </>
+                            )}
+                            {newArrivalCars.length > 0 && (
+                                <>
+                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
+                                        {" "}
+                                        {/* Increased margin-bottom */}
+                                        <FaRegClock className="mr-2 text-blue-500" />{" "}
+                                        New Arrivals
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {renderVehicles(newArrivalCars)}
+                                    </div>
+                                </>
+                            )}
+                            {otherOptions.length > 0 && (
+                                <>
+                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
+                                        {" "}
+                                        {/* Increased margin-bottom */}
+                                        <FaCar className="mr-2 text-green-500" />{" "}
+                                        Other Options
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {renderVehicles(otherOptions)}
+                                    </div>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
@@ -251,7 +268,7 @@ const Dashboard = () => {
                     onConfirm={handleBookingConfirm}
                 />
             )}
-            {/* <footer className="bg-gray-800 text-white py-8 mt-8">
+            <footer className="bg-gray-800 text-white py-8 mt-8">
                 <div className="container mx-auto text-center">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <div className="mb-4 md:mb-0">
@@ -306,10 +323,11 @@ const Dashboard = () => {
                         </a>
                     </div>
                 </div>
-            </footer> */}
+            </footer>
         </div>
     );
 };
 
 export default Dashboard;
+
 
