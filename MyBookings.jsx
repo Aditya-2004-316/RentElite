@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useBookings } from "../context/BookingContext";
 import Navbar from "./Navbar";
 import BookingModal from "./BookingModal";
+import { vehicles } from "../data/vehicles";
 
 const MyBookings = () => {
-    const { bookings, cancelBooking } = useBookings();
+    const { bookings, cancelBooking, setBookings } = useBookings();
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        // Update car images in local storage if they have changed
+        const updatedBookings = bookings.map((booking) => {
+            if (booking.car) {
+                const updatedCar = vehicles.find(
+                    (vehicle) => vehicle.id === booking.car.id
+                );
+                if (updatedCar && updatedCar.image !== booking.car.image) {
+                    return {
+                        ...booking,
+                        car: { ...booking.car, image: updatedCar.image },
+                    };
+                }
+            }
+            return booking;
+        });
+
+        // Update local storage and state if there are any changes
+        if (JSON.stringify(updatedBookings) !== JSON.stringify(bookings)) {
+            setBookings(updatedBookings);
+            localStorage.setItem("bookings", JSON.stringify(updatedBookings));
+        }
+    }, [bookings, setBookings]);
 
     const handleCardClick = (booking) => {
         setSelectedBooking(booking);
@@ -99,4 +124,5 @@ const MyBookings = () => {
 };
 
 export default MyBookings;
+
 
