@@ -13,7 +13,7 @@ import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
 import { vehicles } from "../data/vehicles";
 import BookingModal from "./BookingModal";
-import MyBookings from "./MyBookings";
+// import MyBookings from "./MyBookings";
 import { useBookings } from "../context/BookingContext";
 import { v4 as uuidv4 } from "uuid";
 
@@ -54,6 +54,32 @@ const Dashboard = () => {
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedBookingCar, setSelectedBookingCar] = useState(null);
     const { bookings, addBooking, cancelBooking } = useBookings();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const footer = document.querySelector("footer");
+            const sidebar = document.querySelector("#filters-sidebar");
+            const footerRect = footer.getBoundingClientRect();
+            const sidebarRect = sidebar.getBoundingClientRect();
+
+            if (footerRect.top <= window.innerHeight) {
+                sidebar.style.position = "fixed";
+                sidebar.style.top = "auto";
+                sidebar.style.bottom = `${
+                    window.innerHeight - footerRect.top
+                }px`;
+                sidebar.style.overflowY = "scroll";
+            } else {
+                sidebar.style.position = "fixed";
+                sidebar.style.top = "6.5rem"; // Adjusted top margin to avoid hiding behind the navbar
+                sidebar.style.bottom = "auto";
+                sidebar.style.overflowY = "hidden";
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const handleFilterChange = (filters) => {
         let filtered = [...vehicles];
@@ -195,26 +221,22 @@ const Dashboard = () => {
                 <Navbar />
             </div>
             <div className="flex mt-24">
-                <div className="fixed bottom-0 left-0 h-[calc(100vh-105px)] w-72 z-10">
-                    {" "}
-                    {/* Adjusted width and margin */}
+                <div
+                    id="filters-sidebar"
+                    className="fixed top-26 left-0 h-[calc(100vh-105px)] w-76 z-9 overflow-hidden custom-scrollbar"
+                >
                     <FiltersSidebar onFilterChange={handleFilterChange} />
                 </div>
                 <div className="flex-grow ml-80 p-4">
-                    {" "}
-                    {/* Adjusted margin-left */}
                     {filteredVehicles.length === 0 ? (
                         <p className="text-gray-600 text-center">
-                            Sorry, there are no cars in this price range. Try
-                            searching for a different price range.
+                            No vehicles available.
                         </p>
                     ) : (
                         <>
                             {featuredCars.length > 0 && (
                                 <>
-                                    <h2 className="text-3xl font-bold mb-6 flex items-center">
-                                        {" "}
-                                        {/* Increased margin-bottom */}
+                                    <h2 className="text-3xl font-bold mb-6 flex items-center bg-yellow-100 p-2 rounded shadow">
                                         <FaStar className="mr-2 text-yellow-500" />{" "}
                                         Featured Cars
                                     </h2>
@@ -225,9 +247,7 @@ const Dashboard = () => {
                             )}
                             {newArrivalCars.length > 0 && (
                                 <>
-                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
-                                        {" "}
-                                        {/* Increased margin-bottom */}
+                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-blue-100 p-2 rounded shadow">
                                         <FaRegClock className="mr-2 text-blue-500" />{" "}
                                         New Arrivals
                                     </h2>
@@ -238,9 +258,7 @@ const Dashboard = () => {
                             )}
                             {otherOptions.length > 0 && (
                                 <>
-                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center">
-                                        {" "}
-                                        {/* Increased margin-bottom */}
+                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-green-100 p-2 rounded shadow">
                                         <FaCar className="mr-2 text-green-500" />{" "}
                                         Other Options
                                     </h2>
@@ -268,8 +286,8 @@ const Dashboard = () => {
                     onConfirm={handleBookingConfirm}
                 />
             )}
-            <footer className="bg-gray-800 text-white py-8 mt-8">
-                <div className="container mx-auto text-center">
+            <footer className="bg-emerald-600 text-white py-8 mt-8 w-full">
+                <div className="container mx-auto text-center px-4">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <div className="mb-4 md:mb-0">
                             &copy; {new Date().getFullYear()} Rent Elite. All
@@ -329,5 +347,6 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
