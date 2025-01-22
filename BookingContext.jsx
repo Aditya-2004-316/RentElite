@@ -29,10 +29,11 @@ export const BookingProvider = ({ children }) => {
 
     return (
         <BookingContext.Provider
-            value={{ bookings, addBooking, cancelBooking }}
+            value={{ bookings, addBooking, cancelBooking, setBookings }}
         >
             {children}
         </BookingContext.Provider>
     );
 };
+
 
