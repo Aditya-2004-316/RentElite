@@ -171,11 +171,11 @@ const Dashboard = () => {
         setSelectedBookingCar(null);
     };
 
-    const renderVehicles = (vehicles) => {
+    const renderVehicles = (vehicles, label) => {
         return vehicles.map((car) => (
             <div
                 key={car.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105"
+                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105 relative group"
             >
                 <img
                     src={car.image}
@@ -183,6 +183,11 @@ const Dashboard = () => {
                     className="w-full h-48 object-cover"
                     onClick={() => handleCarClick(car)}
                 />
+                {label && (
+                    <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs py-1 px-2 rounded hidden group-hover:block">
+                        {label}
+                    </div>
+                )}
                 <div className="p-4">
                     <h3 className="text-xl font-bold mb-2">{car.name}</h3>
                     <p className="text-gray-600 mb-2">{car.type}</p>
@@ -242,7 +247,10 @@ const Dashboard = () => {
                                         Featured Cars
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {renderVehicles(featuredCars)}
+                                        {renderVehicles(
+                                            featuredCars,
+                                            "Featured"
+                                        )}
                                     </div>
                                 </>
                             )}
@@ -253,7 +261,7 @@ const Dashboard = () => {
                                         New Arrivals
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {renderVehicles(newArrivalCars)}
+                                        {renderVehicles(newArrivalCars, "New")}
                                     </div>
                                 </>
                             )}
@@ -293,6 +301,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
 
