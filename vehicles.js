@@ -260,7 +260,7 @@ export const vehicles = [
         type: "Hybrid Supercar",
         price: 280,
         company: "Ferrari",
-        image: "https://www.hdcarwallpapers.com/download/ferrari_sf90_stradale_2020_5k_2-3840x2160.jpg",
+        image: "https://i.ebayimg.com/00/s/MTA2N1gxNjAw/z/G7wAAOSwkjJizXot/$_57.JPG?set_id=2",
         specifications: {
             year: 2023,
             transmission: "Automatic",
