@@ -3,10 +3,10 @@ import {
     FaStar,
     FaRegClock,
     FaCar,
-    FaFacebook,
-    FaTwitter,
-    FaInstagram,
-    FaLinkedin,
+    // FaFacebook,
+    // FaTwitter,
+    // FaInstagram,
+    // FaLinkedin,
 } from "react-icons/fa";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
@@ -16,6 +16,7 @@ import BookingModal from "./BookingModal";
 // import MyBookings from "./MyBookings";
 import { useBookings } from "../context/BookingContext";
 import { v4 as uuidv4 } from "uuid";
+import Footer from "./Footer";
 
 const companyNameMappings = {
     Mercedes: "Mercedes",
@@ -247,7 +248,7 @@ const Dashboard = () => {
                             )}
                             {newArrivalCars.length > 0 && (
                                 <>
-                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-blue-100 p-2 rounded shadow">
+                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-violet-100 p-2 rounded shadow">
                                         <FaRegClock className="mr-2 text-blue-500" />{" "}
                                         New Arrivals
                                     </h2>
@@ -286,67 +287,13 @@ const Dashboard = () => {
                     onConfirm={handleBookingConfirm}
                 />
             )}
-            <footer className="bg-emerald-600 text-white py-8 mt-8 w-full">
-                <div className="container mx-auto text-center px-4">
-                    <div className="flex flex-col md:flex-row justify-between items-center">
-                        <div className="mb-4 md:mb-0">
-                            &copy; {new Date().getFullYear()} Rent Elite. All
-                            rights reserved.
-                        </div>
-                        <div className="flex space-x-4">
-                            <a
-                                href="#"
-                                className="text-white hover:text-gray-400"
-                            >
-                                <FaFacebook size={24} />
-                            </a>
-                            <a
-                                href="#"
-                                className="text-white hover:text-gray-400"
-                            >
-                                <FaTwitter size={24} />
-                            </a>
-                            <a
-                                href="#"
-                                className="text-white hover:text-gray-400"
-                            >
-                                <FaInstagram size={24} />
-                            </a>
-                            <a
-                                href="#"
-                                className="text-white hover:text-gray-400"
-                            >
-                                <FaLinkedin size={24} />
-                            </a>
-                        </div>
-                    </div>
-                    <div className="mt-4">
-                        <a
-                            href="#"
-                            className="text-white hover:text-gray-400 mx-2"
-                        >
-                            Privacy Policy
-                        </a>
-                        <a
-                            href="#"
-                            className="text-white hover:text-gray-400 mx-2"
-                        >
-                            Terms of Service
-                        </a>
-                        <a
-                            href="#"
-                            className="text-white hover:text-gray-400 mx-2"
-                        >
-                            Contact Us
-                        </a>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };
 
 export default Dashboard;
+
 
 
 
