@@ -3,17 +3,12 @@ import {
     FaStar,
     FaRegClock,
     FaCar,
-    // FaFacebook,
-    // FaTwitter,
-    // FaInstagram,
-    // FaLinkedin,
 } from "react-icons/fa";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
 import { vehicles } from "../data/vehicles";
 import BookingModal from "./BookingModal";
-// import MyBookings from "./MyBookings";
 import { useBookings } from "../context/BookingContext";
 import { v4 as uuidv4 } from "uuid";
 import Footer from "./Footer";
@@ -54,7 +49,7 @@ const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedBookingCar, setSelectedBookingCar] = useState(null);
-    const { bookings, addBooking, cancelBooking } = useBookings();
+    const { bookings, addBooking } = useBookings();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -66,9 +61,7 @@ const Dashboard = () => {
             if (footerRect.top <= window.innerHeight) {
                 sidebar.style.position = "fixed";
                 sidebar.style.top = "auto";
-                sidebar.style.bottom = `${
-                    window.innerHeight - footerRect.top
-                }px`;
+                sidebar.style.bottom = `${window.innerHeight - footerRect.top}px`;
                 sidebar.style.overflowY = "scroll";
             } else {
                 sidebar.style.position = "fixed";
@@ -221,6 +214,14 @@ const Dashboard = () => {
             !newArrivals.includes(vehicle.name)
     );
 
+    const getVisibleSectionsCount = () => {
+        let count = 0;
+        if (featuredCars.length > 0) count++;
+        if (newArrivalCars.length > 0) count++;
+        if (otherOptions.length > 0) count++;
+        return count;
+    };
+
     return (
         <div className="min-h-screen flex flex-col bg-emerald-50">
             <div className="fixed top-0 left-0 right-0 z-10">
@@ -233,7 +234,11 @@ const Dashboard = () => {
                 >
                     <FiltersSidebar onFilterChange={handleFilterChange} />
                 </div>
-                <div className="flex-grow ml-80 p-4">
+                <div
+                    className={`flex-grow ml-80 p-4 ${
+                        getVisibleSectionsCount() > 1 ? "" : "mb-[100vh]"
+                    }`}
+                >
                     {filteredVehicles.length === 0 ? (
                         <p className="text-gray-600 text-center">
                             No vehicles available.
@@ -243,7 +248,7 @@ const Dashboard = () => {
                             {featuredCars.length > 0 && (
                                 <>
                                     <h2 className="text-3xl font-bold mb-6 flex items-center bg-yellow-100 p-2 rounded shadow">
-                                        <FaStar className="mr-2 text-yellow-500" />{" "}
+                                        <FaStar className="mr-2 text-yellow-500" />
                                         Featured Cars
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -257,18 +262,21 @@ const Dashboard = () => {
                             {newArrivalCars.length > 0 && (
                                 <>
                                     <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-violet-100 p-2 rounded shadow">
-                                        <FaRegClock className="mr-2 text-blue-500" />{" "}
+                                        <FaRegClock className="mr-2 text-blue-500" />
                                         New Arrivals
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {renderVehicles(newArrivalCars, "New")}
+                                        {renderVehicles(
+                                            newArrivalCars,
+                                            "New"
+                                        )}
                                     </div>
                                 </>
                             )}
                             {otherOptions.length > 0 && (
                                 <>
                                     <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-green-100 p-2 rounded shadow">
-                                        <FaCar className="mr-2 text-green-500" />{" "}
+                                        <FaCar className="mr-2 text-green-500" />
                                         Other Options
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -301,8 +309,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
-
-
-
