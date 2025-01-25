@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-    FaStar,
-    FaRegClock,
-    FaCar,
-} from "react-icons/fa";
+import { FaStar, FaRegClock, FaCar } from "react-icons/fa";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
@@ -61,7 +57,9 @@ const Dashboard = () => {
             if (footerRect.top <= window.innerHeight) {
                 sidebar.style.position = "fixed";
                 sidebar.style.top = "auto";
-                sidebar.style.bottom = `${window.innerHeight - footerRect.top}px`;
+                sidebar.style.bottom = `${
+                    window.innerHeight - footerRect.top
+                }px`;
                 sidebar.style.overflowY = "scroll";
             } else {
                 sidebar.style.position = "fixed";
@@ -266,10 +264,7 @@ const Dashboard = () => {
                                         New Arrivals
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {renderVehicles(
-                                            newArrivalCars,
-                                            "New"
-                                        )}
+                                        {renderVehicles(newArrivalCars, "New")}
                                     </div>
                                 </>
                             )}
@@ -309,3 +304,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
