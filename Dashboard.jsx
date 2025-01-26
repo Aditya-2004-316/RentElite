@@ -175,7 +175,7 @@ const Dashboard = () => {
                     onClick={() => handleCarClick(car)}
                 />
                 {label && (
-                    <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs py-1 px-2 rounded hidden group-hover:block">
+                    <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs py-1 px-2 rounded hidden group-hover:block">
                         {label}
                     </div>
                 )}
@@ -259,7 +259,13 @@ const Dashboard = () => {
                             )}
                             {newArrivalCars.length > 0 && (
                                 <>
-                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-violet-100 p-2 rounded shadow">
+                                    <h2
+                                        className={`text-3xl font-bold ${
+                                            featuredCars.length === 0
+                                                ? "mb-6"
+                                                : "mt-8 mb-6"
+                                        } flex items-center bg-violet-100 p-2 rounded shadow`}
+                                    >
                                         <FaRegClock className="mr-2 text-blue-500" />
                                         New Arrivals
                                     </h2>
@@ -270,7 +276,14 @@ const Dashboard = () => {
                             )}
                             {otherOptions.length > 0 && (
                                 <>
-                                    <h2 className="text-3xl font-bold mt-8 mb-6 flex items-center bg-green-100 p-2 rounded shadow">
+                                    <h2
+                                        className={`text-3xl font-bold ${
+                                            featuredCars.length === 0 &&
+                                            newArrivalCars.length === 0
+                                                ? "mb-6"
+                                                : "mt-8 mb-6"
+                                        } flex items-center bg-green-100 p-2 rounded shadow`}
+                                    >
                                         <FaCar className="mr-2 text-green-500" />
                                         Other Options
                                     </h2>
@@ -304,4 +317,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
