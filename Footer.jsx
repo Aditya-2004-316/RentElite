@@ -92,7 +92,7 @@ const Footer = () => {
                                 <FaTwitter size={24} />
                             </a>
                             <a
-                                href="https://www.instagram.com"
+                                href="https://www.instagram.com/rent_elite?igsh=Ym90amJtczJnMDll"
                                 className="text-white hover:text-black"
                             >
                                 <FaInstagram size={24} />
@@ -116,4 +116,5 @@ const Footer = () => {
 };
 
 export default Footer;
+
 
