@@ -1,6 +1,11 @@
 import React from "react";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
+import xtwitterIcon from "../assets/xtwitter.svg";
+import facebookIcon from "../assets/facebook.png";
+import twitterIcon from "../assets/twitter.png";
+import instagramIcon from "../assets/instagram.png";
+import linkedinIcon from "../assets/linkedin.png";
 
 const Footer = () => {
     const location = useLocation();
@@ -81,27 +86,66 @@ const Footer = () => {
                         <div className="flex space-x-4">
                             <a
                                 href="https://www.facebook.com"
-                                className="text-white hover:text-black"
+                                className="relative text-white"
                             >
-                                <FaFacebook size={24} />
+                                <FaFacebook
+                                    size={24}
+                                    className="default-icon"
+                                />
+                                <img
+                                    src={facebookIcon}
+                                    alt="Facebook Icon"
+                                    className="hover-icon absolute top-0 left-0"
+                                />
                             </a>
                             <a
                                 href="https://www.twitter.com"
-                                className="text-white hover:text-black"
+                                className="relative text-white"
                             >
-                                <FaTwitter size={24} />
+                                <img
+                                    src={xtwitterIcon}
+                                    alt="xTwitter Icon"
+                                    className="default-icon w-6 h-6 text-white filter-white"
+                                />
+                                {/* <FaTwitter size={24} className="default-icon" /> */}
+                                <img
+                                    src={twitterIcon}
+                                    alt="Twitter Icon"
+                                    className="hover-icon absolute top-0 left-0"
+                                />
+                                {/* <img
+                                    src={xtwitterIcon}
+                                    alt="xTwitter Icon"
+                                    className="hover-icon absolute top-0 left-0"
+                                /> */}
                             </a>
                             <a
                                 href="https://www.instagram.com/rent_elite?igsh=Ym90amJtczJnMDll"
-                                className="text-white hover:text-black"
+                                className="relative text-white"
                             >
-                                <FaInstagram size={24} />
+                                <FaInstagram
+                                    size={24}
+                                    className="default-icon"
+                                />
+                                <img
+                                    src={instagramIcon}
+                                    alt="Instagram Icon"
+                                    className="hover-icon absolute top-0 left-0"
+                                />
                             </a>
                             <a
                                 href="https://www.linkedin.com"
-                                className="text-white hover:text-black"
+                                className="relative text-white"
                             >
-                                <FaLinkedin size={24} />
+                                <FaLinkedin
+                                    size={24}
+                                    className="default-icon"
+                                />
+                                <img
+                                    src={linkedinIcon}
+                                    alt="LinkedIn Icon"
+                                    className="hover-icon absolute top-0 left-0"
+                                />
                             </a>
                         </div>
                     </div>
@@ -116,5 +160,6 @@ const Footer = () => {
 };
 
 export default Footer;
+
 
 
