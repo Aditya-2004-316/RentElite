@@ -1,13 +1,18 @@
 import React from "react";
 import logo from "../assets/logo.png";
+import racingCar from "../assets/racing-car.png";
+import carBooking from "../assets/calendar.png";
+import favorite from "../assets/favorite.png";
+import profile from "../assets/user.png";
+import logout from "../assets/logout.png";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-    FaHome,
-    FaUser,
-    FaCarAlt,
-    FaHistory,
-    FaSignOutAlt,
-} from "react-icons/fa";
+// import {
+//     FaHeart,
+//     FaUser,
+//     FaCarAlt,
+//     FaHistory,
+//     FaSignOutAlt,
+// } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -24,9 +29,9 @@ const Navbar = () => {
 
     return (
         <nav className="bg-gradient-to-r from-teal-800 to-emerald-600 shadow-lg">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-8xl mx-auto px-4">
                 <div className="flex justify-between h-20">
-                    <div className="flex items-center -ml-24">
+                    <div className="flex items-center">
                         <button
                             onClick={() => navigate("/")}
                             className="flex-shrink-0 flex items-center gap-1"
@@ -78,7 +83,12 @@ const Navbar = () => {
                                     }}
                                     className="flex items-center gap-3"
                                 >
-                                    <FaHistory className="text-2xl" /> Dashboard
+                                    <img
+                                        src={racingCar}
+                                        alt="Racing Car Icon"
+                                        className="mr-2 w-8 h-8 text-2xl"
+                                    />
+                                    Dashboard
                                 </Link>
                             </li>
                             <li style={{ margin: "0 25px" }}>
@@ -93,7 +103,32 @@ const Navbar = () => {
                                     }}
                                     className="flex items-center gap-3"
                                 >
-                                    <FaUser className="text-2xl" /> My Bookings
+                                    <img
+                                        src={carBooking}
+                                        alt="Car Booking Icon"
+                                        className="mr-2 w-8 h-8 text-2xl"
+                                    />
+                                    My Bookings
+                                </Link>
+                            </li>
+                            <li style={{ margin: "0 25px" }}>
+                                <Link
+                                    to="/favourites"
+                                    style={{
+                                        color:
+                                            location.pathname === "/favourites"
+                                                ? "#000000"
+                                                : "white",
+                                        textDecoration: "none",
+                                    }}
+                                    className="flex items-center gap-3"
+                                >
+                                    <img
+                                        src={favorite}
+                                        alt="Favorite Icon"
+                                        className="mr-2 w-8 h-8 text-2xl"
+                                    />
+                                    Favourites
                                 </Link>
                             </li>
                             <li style={{ margin: "0 25px" }}>
@@ -108,7 +143,11 @@ const Navbar = () => {
                                     }}
                                     className="flex items-center gap-3"
                                 >
-                                    <FaSignOutAlt className="text-2xl" />{" "}
+                                    <img
+                                        src={profile}
+                                        alt="Profile Icon"
+                                        className="mr-2 w-8 h-8 text-2xl"
+                                    />
                                     Profile
                                 </Link>
                             </li>
@@ -124,7 +163,12 @@ const Navbar = () => {
                                     }}
                                     className="flex items-center gap-3"
                                 >
-                                    <FaSignOutAlt className="text-2xl" /> Logout
+                                    <img
+                                        src={logout}
+                                        alt="Logout Icon"
+                                        className="mr-2 w-8 h-8 text-2xl"
+                                    />
+                                    Logout
                                 </Link>
                             </li>
                         </ul>
@@ -136,6 +180,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 
