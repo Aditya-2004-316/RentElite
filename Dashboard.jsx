@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { FaStar, FaRegClock, FaCar } from "react-icons/fa";
+import React, { useState, useEffect, useContext } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import newIcon from "../assets/new.png";
+import star from "../assets/feature.png";
+import option from "../assets/option.png";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
 import { vehicles } from "../data/vehicles";
 import BookingModal from "./BookingModal";
 import { useBookings } from "../context/BookingContext";
+import {
+    FavouritesContext,
+    FavouritesProvider,
+} from "../context/FavouritesContext";
 import { v4 as uuidv4 } from "uuid";
 import Footer from "./Footer";
 
@@ -45,7 +52,9 @@ const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedBookingCar, setSelectedBookingCar] = useState(null);
+    const [notification, setNotification] = useState("");
     const { bookings, addBooking } = useBookings();
+    const { favorites, setFavorites } = useContext(FavouritesContext);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -162,6 +171,24 @@ const Dashboard = () => {
         setSelectedBookingCar(null);
     };
 
+    const toggleFavorite = (carId, carName) => {
+        setFavorites((prevFavorites) => {
+            const isFavorite = !prevFavorites[carId];
+            setNotification(
+                `${carName} ${
+                    isFavorite ? "added to" : "removed from"
+                } favourites.`
+            );
+            setTimeout(() => {
+                setNotification("");
+            }, 3000);
+            return {
+                ...prevFavorites,
+                [carId]: isFavorite,
+            };
+        });
+    };
+
     const renderVehicles = (vehicles, label) => {
         return vehicles.map((car) => (
             <div
@@ -180,7 +207,18 @@ const Dashboard = () => {
                     </div>
                 )}
                 <div className="p-4">
-                    <h3 className="text-xl font-bold mb-2">{car.name}</h3>
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-xl font-bold">{car.name}</h3>
+                        <button
+                            onClick={() => toggleFavorite(car.id, car.name)}
+                        >
+                            {favorites[car.id] ? (
+                                <FaHeart className="text-2xl text-red-500" />
+                            ) : (
+                                <FaRegHeart className="text-2xl text-gray-500" />
+                            )}
+                        </button>
+                    </div>
                     <p className="text-gray-600 mb-2">{car.type}</p>
                     <div className="flex items-center justify-between">
                         <p className="text-[#0fa16d] font-bold text-lg">
@@ -246,7 +284,12 @@ const Dashboard = () => {
                             {featuredCars.length > 0 && (
                                 <>
                                     <h2 className="text-3xl font-bold mb-6 flex items-center bg-yellow-100 p-2 rounded shadow">
-                                        <FaStar className="mr-2 text-yellow-500" />
+                                        <img
+                                            src={star}
+                                            alt="Star Icon"
+                                            className="mr-2 w-8 h-8"
+                                        />
+                                        {/* <FaStar className="mr-2 text-yellow-500" /> */}
                                         Featured Cars
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -264,9 +307,14 @@ const Dashboard = () => {
                                             featuredCars.length === 0
                                                 ? "mb-6"
                                                 : "mt-8 mb-6"
-                                        } flex items-center bg-violet-100 p-2 rounded shadow`}
+                                        } flex items-center bg-orange-100 p-2 rounded shadow`}
                                     >
-                                        <FaRegClock className="mr-2 text-blue-500" />
+                                        <img
+                                            src={newIcon}
+                                            alt="New Icon"
+                                            className="mr-2 w-8 h-8"
+                                        />
+                                        {/* <FaRegClock className="mr-2 text-blue-500" /> */}
                                         New Arrivals
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -284,7 +332,12 @@ const Dashboard = () => {
                                                 : "mt-8 mb-6"
                                         } flex items-center bg-green-100 p-2 rounded shadow`}
                                     >
-                                        <FaCar className="mr-2 text-green-500" />
+                                        <img
+                                            src={option}
+                                            alt="Option Icon"
+                                            className="mr-2 w-8 h-8"
+                                        />
+                                        {/* <FaCar className="mr-2 text-green-500" /> */}
                                         Other Options
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -311,11 +364,23 @@ const Dashboard = () => {
                     onConfirm={handleBookingConfirm}
                 />
             )}
+            {notification && (
+                <div className="fixed bottom-4 right-4 bg-green-600 text-white py-2 px-4 rounded shadow-lg">
+                    {notification}
+                </div>
+            )}
             <Footer />
         </div>
     );
 };
 
-export default Dashboard;
+const DashboardPage = () => (
+    <FavouritesProvider>
+        <Dashboard />
+    </FavouritesProvider>
+);
+
+export default DashboardPage;
+
 
 
