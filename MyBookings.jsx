@@ -3,6 +3,7 @@ import { useBookings } from "../context/BookingContext";
 import Navbar from "./Navbar";
 import BookingModal from "./BookingModal";
 import { vehicles } from "../data/vehicles";
+import Footer from "./Footer";
 
 const MyBookings = () => {
     const { bookings, cancelBooking, setBookings } = useBookings();
@@ -119,10 +120,12 @@ const MyBookings = () => {
                     isBookingView={true}
                 />
             )}
+            <Footer />
         </div>
     );
 };
 
 export default MyBookings;
+
 
 
