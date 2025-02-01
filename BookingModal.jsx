@@ -28,6 +28,19 @@ const BookingModal = ({
     const [scale, setScale] = useState(1);
     const { addBooking } = useBookings();
 
+    // Add notification states
+    const [notification, setNotification] = useState(null);
+    const [notificationVisible, setNotificationVisible] = useState(false);
+
+    // Add notification handler
+    const showNotification = (message) => {
+        setNotification(message);
+        setNotificationVisible(true);
+        setTimeout(() => {
+            setNotificationVisible(false);
+        }, 3000);
+    };
+
     useEffect(() => {
         setLocalStartDate(startDate || "");
         setLocalEndDate(endDate || "");
@@ -51,11 +64,13 @@ const BookingModal = ({
         };
 
         onConfirm(bookingDetails);
+        showNotification("Booking confirmed successfully!");
         onClose();
     };
 
     const handleCancelBooking = () => {
         onCancelBooking();
+        showNotification("Booking cancelled successfully!");
         onClose();
     };
 
@@ -245,10 +260,24 @@ const BookingModal = ({
                     </div>
                 </div>
             </div>
+
+            {/* Notification Toast */}
+            {notificationVisible && notification && (
+                <div
+                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[60] ${
+                        notificationVisible
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-10 opacity-0"
+                    }`}
+                >
+                    {notification}
+                </div>
+            )}
         </div>
     );
 };
 
 export default BookingModal;
+
 
 
