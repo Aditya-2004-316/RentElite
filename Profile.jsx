@@ -14,16 +14,121 @@ import {
     FaTimes,
     FaTrash,
 } from "react-icons/fa";
+import styled from "styled-components";
+
+// Styled Components
+const ProfileContainer = styled.div`
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const TabsContainer = styled.div`
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+`;
+
+const TabButton = styled.button`
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: ${(props) => (props.active ? "#2563eb" : "#666")};
+    border-bottom: ${(props) => (props.active ? "2px solid #2563eb" : "none")};
+    transition: color 0.3s;
+`;
+
+const FormGroup = styled.div`
+    margin-bottom: 1.5rem;
+`;
+
+const Label = styled.label`
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+`;
+
+const Input = styled.input`
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: ${(props) => (props.disabled ? "#f3f4f6" : "white")};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "text")};
+`;
+
+const TextArea = styled.textarea`
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: ${(props) => (props.disabled ? "#f3f4f6" : "white")};
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "text")};
+`;
+
+const ButtonGroup = styled.div`
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+`;
+
+const Button = styled.button`
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    color: white;
+
+    &:hover {
+        background-color: ${(props) => {
+            switch (props.buttonType) {
+                case "edit":
+                    return "#1d4ed8";
+                case "save":
+                    return "#047857";
+                case "cancel":
+                    return "#b91c1c";
+                default:
+                    return "#1d4ed8";
+            }
+        }};
+    }
+
+    background-color: ${(props) => {
+        switch (props.buttonType) {
+            case "edit":
+                return "#2563eb";
+            case "save":
+                return "#059669";
+            case "cancel":
+                return "#dc2626";
+            default:
+                return "#2563eb";
+        }
+    }};
+`;
 
 const Profile = () => {
     const [activeTab, setActiveTab] = useState("personal");
     const [isEditing, setIsEditing] = useState(false);
     const [showAddPayment, setShowAddPayment] = useState(false);
     const [newPayment, setNewPayment] = useState({
+        cardholderName: "",
         cardNumber: "",
         expiryDate: "",
         cvv: "",
-        cardholderName: "",
     });
     const [showAllRentals, setShowAllRentals] = useState(false);
     const [emailNotifications, setEmailNotifications] = useState(true);
@@ -31,45 +136,60 @@ const Profile = () => {
     const [notification, setNotification] = useState(null);
     const [notificationVisible, setNotificationVisible] = useState(false);
 
-    // Sample user data (replace with actual user data)
-    const [userData, setUserData] = useState({
-        name: "John Doe",
-        email: "john.doe@example.com",
-        phone: "+1 234 567 8900",
-        address: "123 Main St, New York, NY 10001",
-        license: "DL-123456789",
-        joinDate: "January 2024",
-        totalBookings: 8,
-        preferredCars: ["Mercedes-Benz S-Class", "BMW 7 Series"],
+    // Initialize state with data from localStorage
+    const [userData, setUserData] = useState(() => {
+        const savedData = localStorage.getItem("userData");
+        return savedData
+            ? JSON.parse(savedData)
+            : {
+                  name: "",
+                  email: "",
+                  phone: "",
+                  address: "",
+                  license: "",
+                  joinDate: new Date().toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                  }),
+                  emailNotifications: false,
+                  smsNotifications: false,
+                  darkMode: false,
+                  language: "english",
+                  currency: "usd",
+              };
     });
 
-    // State for edited data
     const [editedData, setEditedData] = useState({ ...userData });
 
     // Add this new state for payment methods near other useState declarations
-    const [paymentMethods, setPaymentMethods] = useState([
-        {
-            id: 1,
-            type: "Visa",
-            lastFour: "4242",
-            expiryDate: "12/25",
-            isDefault: true,
-        },
-        {
-            id: 2,
-            type: "Mastercard",
-            lastFour: "8888",
-            expiryDate: "09/24",
-            isDefault: false,
-        },
-    ]);
+    const [paymentMethods, setPaymentMethods] = useState(() => {
+        const savedPaymentMethods = localStorage.getItem("paymentMethods");
+        return savedPaymentMethods ? JSON.parse(savedPaymentMethods) : [];
+    });
 
     // Add these new states for settings
     const [darkMode, setDarkMode] = useState(false);
     const [language, setLanguage] = useState("english");
     const [currency, setCurrency] = useState("usd");
 
-    const [preferences, setPreferences] = useState([]); // Add this line
+    const [preferences, setPreferences] = useState([]);
+    const [preferencesChanged, setPreferencesChanged] = useState(false);
+    const [settingsChanged, setSettingsChanged] = useState(false);
+
+    // Load user data from localStorage when component mounts
+    useEffect(() => {
+        const savedData = localStorage.getItem("userData");
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            setUserData(parsedData);
+            setEditedData(parsedData);
+        }
+    }, []);
+
+    // Save user data to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("userData", JSON.stringify(userData));
+    }, [userData]);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -77,9 +197,32 @@ const Profile = () => {
     };
 
     const handleSave = () => {
+        // Validate required fields
+        if (!editedData.name || !editedData.email || !editedData.phone) {
+            showNotification(
+                "Please fill in all required fields (Name, Email, and Phone)"
+            );
+            return;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(editedData.email)) {
+            showNotification("Please enter a valid email address");
+            return;
+        }
+
+        // Validate phone number (basic validation)
+        const phoneRegex = /^\+?[\d\s-]{10,}$/;
+        if (!phoneRegex.test(editedData.phone)) {
+            showNotification("Please enter a valid phone number");
+            return;
+        }
+
         setUserData({ ...editedData });
         setIsEditing(false);
-        // Here you would typically make an API call to update the user data
+        localStorage.setItem("userData", JSON.stringify(editedData));
+        showNotification("Changes saved successfully!");
     };
 
     const handleCancel = () => {
@@ -97,40 +240,67 @@ const Profile = () => {
     const handleAddPayment = (e) => {
         e.preventDefault();
 
-        // Validate card number (basic validation)
-        if (newPayment.cardNumber.length !== 16) {
-            showNotification("Invalid card number");
+        // Basic validation
+        if (
+            !newPayment.cardholderName ||
+            !newPayment.cardNumber ||
+            !newPayment.expiryDate ||
+            !newPayment.cvv
+        ) {
+            showNotification("Please fill in all fields");
             return;
         }
 
         // Create new payment method object
-        const lastFour = newPayment.cardNumber.slice(-4);
-        const cardType = newPayment.cardNumber.startsWith("4")
-            ? "Visa"
-            : "Mastercard"; // Simple card type detection
-
         const newPaymentMethod = {
-            id: Date.now(), // Generate unique ID
-            type: cardType,
-            lastFour: lastFour,
+            id: Date.now(), // Unique ID
+            type: "Credit Card",
+            lastFour: newPayment.cardNumber.slice(-4),
+            cardholderName: newPayment.cardholderName,
             expiryDate: newPayment.expiryDate,
-            isDefault: paymentMethods.length === 0, // Make default if it's the first card
+            isDefault: paymentMethods.length === 0, // Make first card default
         };
 
-        // Add new payment method to the list
-        setPaymentMethods((prevMethods) => [...prevMethods, newPaymentMethod]);
+        // Update state and localStorage
+        const updatedPaymentMethods = [...paymentMethods, newPaymentMethod];
+        setPaymentMethods(updatedPaymentMethods);
+        localStorage.setItem(
+            "paymentMethods",
+            JSON.stringify(updatedPaymentMethods)
+        );
 
-        // Reset form and close modal
+        // Reset form and close
         setNewPayment({
+            cardholderName: "",
             cardNumber: "",
             expiryDate: "",
             cvv: "",
-            cardholderName: "",
         });
         setShowAddPayment(false);
+        showNotification("Payment method added successfully!");
+    };
 
-        // Show success notification
-        showNotification("New payment method added successfully");
+    const handleRemovePayment = (paymentId) => {
+        const updatedPaymentMethods = paymentMethods.filter(
+            (method) => method.id !== paymentId
+        );
+        setPaymentMethods(updatedPaymentMethods);
+        localStorage.setItem(
+            "paymentMethods",
+            JSON.stringify(updatedPaymentMethods)
+        );
+    };
+
+    const handleSetDefaultPayment = (paymentId) => {
+        const updatedPaymentMethods = paymentMethods.map((method) => ({
+            ...method,
+            isDefault: method.id === paymentId,
+        }));
+        setPaymentMethods(updatedPaymentMethods);
+        localStorage.setItem(
+            "paymentMethods",
+            JSON.stringify(updatedPaymentMethods)
+        );
     };
 
     // Update the rental history state
@@ -201,37 +371,6 @@ const Profile = () => {
         }, 3000); // Hide after 3 seconds
     }, []);
 
-    // Add this function to handle setting default payment method
-    const handleSetDefaultPayment = (paymentId) => {
-        setPaymentMethods((prevMethods) =>
-            prevMethods.map((method) => ({
-                ...method,
-                isDefault: method.id === paymentId,
-            }))
-        );
-        showNotification("Default payment method updated");
-    };
-
-    // Add this function to handle removing payment methods
-    const handleRemovePayment = (paymentId) => {
-        setPaymentMethods((prevMethods) => {
-            const updatedMethods = prevMethods.filter(
-                (method) => method.id !== paymentId
-            );
-
-            // If we removed the default card and there are other cards, make the first one default
-            if (
-                prevMethods.find((m) => m.id === paymentId)?.isDefault &&
-                updatedMethods.length > 0
-            ) {
-                updatedMethods[0].isDefault = true;
-            }
-
-            return updatedMethods;
-        });
-        showNotification("Payment method removed successfully");
-    };
-
     useEffect(() => {
         // Fetch rental history data from local storage when the component mounts
         const getRentalHistory = () => {
@@ -255,13 +394,11 @@ const Profile = () => {
             .sort(([, a], [, b]) => b - a)
             .map(([carName]) => carName);
 
-        setPreferences(sortedCars);
+        setEditedData((prev) => ({
+            ...prev,
+            preferences: sortedCars,
+        }));
     }, [rentalHistory]);
-
-    useEffect(() => {
-        // Save user data to local storage whenever it changes
-        localStorage.setItem("userData", JSON.stringify(userData));
-    }, [userData]);
 
     useEffect(() => {
         // Save rental history to local storage whenever it changes
@@ -270,8 +407,56 @@ const Profile = () => {
 
     useEffect(() => {
         // Save preferences to local storage whenever they change
-        localStorage.setItem("preferences", JSON.stringify(preferences));
-    }, [preferences]);
+        localStorage.setItem(
+            "preferences",
+            JSON.stringify(editedData.preferences)
+        );
+    }, [editedData.preferences]);
+
+    // Handlers for Preferences Tab
+    const handlePreferencesChange = (field, value) => {
+        setEditedData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+        setPreferencesChanged(true);
+    };
+
+    const handlePreferencesSave = () => {
+        const updatedData = {
+            ...userData,
+            emailNotifications: editedData.emailNotifications,
+            smsNotifications: editedData.smsNotifications,
+        };
+
+        setUserData(updatedData);
+        setPreferencesChanged(false);
+        localStorage.setItem("userData", JSON.stringify(updatedData));
+        showNotification("Preferences saved successfully!");
+    };
+
+    // Handlers for Settings Tab
+    const handleSettingsChange = (field, value) => {
+        setEditedData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+        setSettingsChanged(true);
+    };
+
+    const handleSettingsSave = () => {
+        const updatedData = {
+            ...userData,
+            darkMode: editedData.darkMode,
+            language: editedData.language,
+            currency: editedData.currency,
+        };
+
+        setUserData(updatedData);
+        setSettingsChanged(false);
+        localStorage.setItem("userData", JSON.stringify(updatedData));
+        showNotification("Settings saved successfully!");
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -282,12 +467,12 @@ const Profile = () => {
                     <div className="flex items-center space-x-6">
                         <div className="w-24 h-24 bg-emerald-600 rounded-full flex items-center justify-center">
                             <span className="text-4xl text-white font-bold">
-                                {userData.name.charAt(0)}
+                                {userData.name ? userData.name.charAt(0) : "?"}
                             </span>
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900">
-                                {userData.name}
+                                {userData.name || "Your Name"}
                             </h1>
                             <p className="text-gray-600">
                                 Member since {userData.joinDate}
@@ -375,7 +560,7 @@ const Profile = () => {
                                             />
                                         ) : (
                                             <p className="text-gray-900">
-                                                {userData.name}
+                                                {userData.name || "Not set"}
                                             </p>
                                         )}
                                     </div>
@@ -400,7 +585,7 @@ const Profile = () => {
                                             />
                                         ) : (
                                             <p className="text-gray-900">
-                                                {userData.email}
+                                                {userData.email || "Not set"}
                                             </p>
                                         )}
                                     </div>
@@ -425,7 +610,7 @@ const Profile = () => {
                                             />
                                         ) : (
                                             <p className="text-gray-900">
-                                                {userData.phone}
+                                                {userData.phone || "Not set"}
                                             </p>
                                         )}
                                     </div>
@@ -450,7 +635,7 @@ const Profile = () => {
                                             />
                                         ) : (
                                             <p className="text-gray-900">
-                                                {userData.address}
+                                                {userData.address || "Not set"}
                                             </p>
                                         )}
                                     </div>
@@ -475,7 +660,7 @@ const Profile = () => {
                                             />
                                         ) : (
                                             <p className="text-gray-900">
-                                                {userData.license}
+                                                {userData.license || "Not set"}
                                             </p>
                                         )}
                                     </div>
@@ -584,90 +769,82 @@ const Profile = () => {
                         )}
 
                         {activeTab === "preferences" && (
-                            <>
-                                <div className="space-y-6">
-                                    <div>
-                                        <h3 className="text-lg font-semibold mb-4">
-                                            Preferred Vehicles
-                                        </h3>
-                                        <div className="space-y-3">
-                                            {preferredCars.length > 0 ? (
-                                                preferredCars.map(
-                                                    (car, index) => (
-                                                        <div
-                                                            key={index}
-                                                            className="flex items-center space-x-3"
-                                                        >
-                                                            <FaCar className="text-emerald-600" />
-                                                            <span>{car}</span>
-                                                        </div>
-                                                    )
-                                                )
-                                            ) : (
-                                                <p className="text-gray-500">
-                                                    No booking history available
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-semibold mb-4">
-                                            Notification Preferences
-                                        </h3>
-                                        <div className="space-y-3">
-                                            <label className="flex items-center space-x-3 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="form-checkbox text-emerald-600"
-                                                    checked={emailNotifications}
-                                                    onChange={(e) => {
-                                                        setEmailNotifications(
-                                                            e.target.checked
-                                                        );
-                                                        showNotification(
-                                                            e.target.checked
-                                                                ? "Email notifications enabled"
-                                                                : "Email notifications disabled"
-                                                        );
-                                                    }}
-                                                />
-                                                <span>Email notifications</span>
-                                            </label>
-                                            <label className="flex items-center space-x-3 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="form-checkbox text-emerald-600"
-                                                    checked={smsNotifications}
-                                                    onChange={(e) => {
-                                                        setSmsNotifications(
-                                                            e.target.checked
-                                                        );
-                                                        showNotification(
-                                                            e.target.checked
-                                                                ? "SMS notifications enabled"
-                                                                : "SMS notifications disabled"
-                                                        );
-                                                    }}
-                                                />
-                                                <span>SMS notifications</span>
-                                            </label>
-                                        </div>
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-4">
+                                        Preferred Vehicles
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {preferredCars.length > 0 ? (
+                                            preferredCars.map((car, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex items-center space-x-3"
+                                                >
+                                                    <FaCar className="text-emerald-600" />
+                                                    <span>{car}</span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-gray-500">
+                                                No booking history available
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
-
-                                {/* Add notification toast */}
-                                {notificationVisible && notification && (
-                                    <div
-                                        className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${
-                                            notificationVisible
-                                                ? "translate-y-0 opacity-100"
-                                                : "translate-y-10 opacity-0"
-                                        }`}
-                                    >
-                                        {notification}
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-4">
+                                        Notification Preferences
+                                    </h3>
+                                    <div className="space-y-3">
+                                        <label className="flex items-center space-x-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                className="form-checkbox text-emerald-600"
+                                                checked={
+                                                    editedData.emailNotifications
+                                                }
+                                                onChange={(e) => {
+                                                    handlePreferencesChange(
+                                                        "emailNotifications",
+                                                        e.target.checked
+                                                    );
+                                                    setPreferencesChanged(true);
+                                                }}
+                                            />
+                                            <span>Email notifications</span>
+                                        </label>
+                                        <label className="flex items-center space-x-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                className="form-checkbox text-emerald-600"
+                                                checked={
+                                                    editedData.smsNotifications
+                                                }
+                                                onChange={(e) => {
+                                                    handlePreferencesChange(
+                                                        "smsNotifications",
+                                                        e.target.checked
+                                                    );
+                                                    setPreferencesChanged(true);
+                                                }}
+                                            />
+                                            <span>SMS notifications</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                {preferencesChanged && (
+                                    <div className="flex justify-end">
+                                        <button
+                                            onClick={handlePreferencesSave}
+                                            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
+                                        >
+                                            <FaSave />
+                                            <span>Save Changes</span>
+                                        </button>
                                     </div>
                                 )}
-                            </>
+                            </div>
                         )}
 
                         {activeTab === "payment" && (
@@ -912,17 +1089,16 @@ const Profile = () => {
                                                 <input
                                                     type="checkbox"
                                                     className="sr-only peer"
-                                                    checked={darkMode}
+                                                    checked={
+                                                        editedData.darkMode
+                                                    }
                                                     onChange={(e) => {
-                                                        setDarkMode(
+                                                        handleSettingsChange(
+                                                            "darkMode",
                                                             e.target.checked
                                                         );
-                                                        showNotification(
-                                                            `Dark mode ${
-                                                                e.target.checked
-                                                                    ? "enabled"
-                                                                    : "disabled"
-                                                            }`
+                                                        setSettingsChanged(
+                                                            true
                                                         );
                                                     }}
                                                 />
@@ -935,13 +1111,13 @@ const Profile = () => {
                                                 Language
                                             </label>
                                             <select
-                                                value={language}
-                                                onChange={(e) => {
-                                                    setLanguage(e.target.value);
-                                                    showNotification(
-                                                        `Language changed to ${e.target.value}`
-                                                    );
-                                                }}
+                                                value={editedData.language}
+                                                onChange={(e) =>
+                                                    handleSettingsChange(
+                                                        "language",
+                                                        e.target.value
+                                                    )
+                                                }
                                                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                                             >
                                                 <option value="english">
@@ -964,9 +1140,12 @@ const Profile = () => {
                                                 Currency
                                             </label>
                                             <select
-                                                value={currency}
+                                                value={editedData.currency}
                                                 onChange={(e) =>
-                                                    setCurrency(e.target.value)
+                                                    handleSettingsChange(
+                                                        "currency",
+                                                        e.target.value
+                                                    )
                                                 }
                                                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                                             >
@@ -1043,7 +1222,7 @@ const Profile = () => {
                                                     "Password change functionality will be added soon"
                                                 )
                                             }
-                                            className="w-72 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
+                                            className="w-76 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
                                         >
                                             Change Password
                                         </button>
@@ -1053,21 +1232,46 @@ const Profile = () => {
                                                     "Two-factor authentication functionality will be added soon"
                                                 )
                                             }
-                                            className="w-72 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
+                                            className="w-76 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
                                         >
-                                            Enable 2-Factor Authentication
+                                            Enable Two-Factor Authentication
                                         </button>
                                     </div>
                                 </div>
+                                {settingsChanged && (
+                                    <div className="flex justify-end mt-6">
+                                        <button
+                                            onClick={handleSettingsSave}
+                                            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
+                                        >
+                                            <FaSave />
+                                            <span>Save Changes</span>
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* Add this notification toast */}
+            {notificationVisible && notification && (
+                <div
+                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${
+                        notificationVisible
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-10 opacity-0"
+                    }`}
+                >
+                    {notification}
+                </div>
+            )}
         </div>
     );
 };
 
 export default Profile;
+
 
 
