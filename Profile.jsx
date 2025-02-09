@@ -151,9 +151,13 @@ const Profile = () => {
                       month: "long",
                       year: "numeric",
                   }),
+                  // Preferences tab checkboxes
                   emailNotifications: false,
                   smsNotifications: false,
+                  // Settings tab checkboxes
                   darkMode: false,
+                  profileVisibility: false,
+                  activityStatus: false,
                   language: "english",
                   currency: "usd",
               };
@@ -448,6 +452,8 @@ const Profile = () => {
         const updatedData = {
             ...userData,
             darkMode: editedData.darkMode,
+            profileVisibility: editedData.profileVisibility,
+            activityStatus: editedData.activityStatus,
             language: editedData.language,
             currency: editedData.currency,
         };
@@ -457,6 +463,11 @@ const Profile = () => {
         localStorage.setItem("userData", JSON.stringify(updatedData));
         showNotification("Settings saved successfully!");
     };
+
+    // Make sure editedData is initialized with userData when component mounts
+    useEffect(() => {
+        setEditedData(userData);
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -1075,7 +1086,6 @@ const Profile = () => {
 
                         {activeTab === "settings" && (
                             <div className="space-y-8">
-                                {/* Account Settings */}
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4">
                                         Account Settings
@@ -1112,12 +1122,13 @@ const Profile = () => {
                                             </label>
                                             <select
                                                 value={editedData.language}
-                                                onChange={(e) =>
+                                                onChange={(e) => {
                                                     handleSettingsChange(
                                                         "language",
                                                         e.target.value
-                                                    )
-                                                }
+                                                    );
+                                                    setSettingsChanged(true);
+                                                }}
                                                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                                             >
                                                 <option value="english">
@@ -1141,12 +1152,13 @@ const Profile = () => {
                                             </label>
                                             <select
                                                 value={editedData.currency}
-                                                onChange={(e) =>
+                                                onChange={(e) => {
                                                     handleSettingsChange(
                                                         "currency",
                                                         e.target.value
-                                                    )
-                                                }
+                                                    );
+                                                    setSettingsChanged(true);
+                                                }}
                                                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                                             >
                                                 <option value="usd">
@@ -1176,14 +1188,16 @@ const Profile = () => {
                                             <input
                                                 type="checkbox"
                                                 className="form-checkbox text-emerald-600"
+                                                checked={
+                                                    editedData.profileVisibility ||
+                                                    false
+                                                }
                                                 onChange={(e) => {
-                                                    showNotification(
-                                                        `Profile visibility ${
-                                                            e.target.checked
-                                                                ? "enabled"
-                                                                : "disabled"
-                                                        }`
+                                                    handleSettingsChange(
+                                                        "profileVisibility",
+                                                        e.target.checked
                                                     );
+                                                    setSettingsChanged(true);
                                                 }}
                                             />
                                             <span>
@@ -1195,14 +1209,16 @@ const Profile = () => {
                                             <input
                                                 type="checkbox"
                                                 className="form-checkbox text-emerald-600"
+                                                checked={
+                                                    editedData.activityStatus ||
+                                                    false
+                                                }
                                                 onChange={(e) => {
-                                                    showNotification(
-                                                        `Activity status ${
-                                                            e.target.checked
-                                                                ? "enabled"
-                                                                : "disabled"
-                                                        }`
+                                                    handleSettingsChange(
+                                                        "activityStatus",
+                                                        e.target.checked
                                                     );
+                                                    setSettingsChanged(true);
                                                 }}
                                             />
                                             <span>Show activity status</span>
@@ -1272,6 +1288,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
 
 
 
