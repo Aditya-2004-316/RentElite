@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
@@ -8,11 +8,29 @@ const Login = () => {
         email: "",
         password: "",
     });
+    const [rememberMe, setRememberMe] = useState(false);
+
+    useEffect(() => {
+        // Check local storage for saved email
+        const savedEmail = localStorage.getItem("savedEmail");
+        if (savedEmail) {
+            setFormData({ ...formData, email: savedEmail });
+            setRememberMe(true); // Set checkbox to checked
+        }
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Navigating to dashboard...");
-        navigate("/dashboard");
+
+        // Save email to local storage if "Remember Me" is checked
+        if (rememberMe) {
+            localStorage.setItem("savedEmail", formData.email);
+        } else {
+            localStorage.removeItem("savedEmail");
+        }
+
+        navigate("/dashboard"); // Redirect to dashboard after login
     };
 
     const handleChange = (e) => {
@@ -23,12 +41,15 @@ const Login = () => {
     };
 
     const handleSignUp = () => {
-        navigate("/signup");
+        navigate("/signup"); // Navigate to the sign-up page
+    };
+
+    const handleCheckboxChange = () => {
+        setRememberMe(!rememberMe); // Toggle the checkbox state
     };
 
     return (
         <div className="flex min-h-screen">
-            {/* Left section - modified */}
             <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-r from-blue-500 to-indigo-800">
                 <div className="flex items-center justify-center w-full px-8">
                     <div className="flex items-center -gap-6">
@@ -44,7 +65,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Right section - keep exactly the same */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gray-900">
                 <div className="w-full max-w-md">
                     <div className="text-center mb-10">
@@ -96,6 +116,8 @@ const Login = () => {
                                 <input
                                     type="checkbox"
                                     id="remember"
+                                    checked={rememberMe}
+                                    onChange={handleCheckboxChange} // Handle checkbox change
                                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-700 rounded bg-gray-800"
                                 />
                                 <label
@@ -107,7 +129,7 @@ const Login = () => {
                             </div>
                             <div>
                                 <button
-                                    onClick={() => navigate("/forgot-password")}
+                                    onClick={() => navigate("/forgot-password")} // Navigate to Forgot Password page
                                     className="text-indigo-400 hover:text-indigo-300 text-sm"
                                 >
                                     Forgot Password?
@@ -142,5 +164,6 @@ const Login = () => {
 };
 
 export default Login;
+
 
 
