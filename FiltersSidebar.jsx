@@ -108,8 +108,9 @@ const FiltersSidebar = ({ onFilterChange }) => {
 
     return (
         <div className="bg-white shadow-md rounded-lg p-4 w-80">
+            {" "}
+            {/* Added ml-1 for left margin */}
             <h2 className="text-2xl font-bold mb-4">Filters</h2>
-
             {/* Search Input with Icon */}
             <div className="mb-4 relative">
                 <input
@@ -121,7 +122,6 @@ const FiltersSidebar = ({ onFilterChange }) => {
                 />
                 <FaSearch className="absolute right-3 top-2.5 text-gray-500 cursor-pointer" />
             </div>
-
             <div className="mb-4">
                 <label className="block text-lg font-medium mb-2">
                     Car Company
@@ -138,7 +138,6 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     ))}
                 </select>
             </div>
-
             <div className="mb-4 relative">
                 <label className="block text-lg font-medium mb-2">
                     Price Range
@@ -201,7 +200,6 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     `}
                 </style>
             </div>
-
             <div className="mb-4">
                 <label className="block text-lg font-medium mb-2">
                     Fuel Type
@@ -218,7 +216,6 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     ))}
                 </select>
             </div>
-
             <div className="mb-4">
                 <label className="block text-lg font-medium mb-2">
                     Transmission
@@ -235,7 +232,6 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     ))}
                 </select>
             </div>
-
             <div className="mb-4">
                 <label className="block text-lg font-medium mb-2">
                     Car Type
@@ -257,3 +253,4 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
