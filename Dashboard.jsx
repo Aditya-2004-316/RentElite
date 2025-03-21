@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import newIcon from "../assets/new.png";
-import star from "../assets/feature.png";
-import option from "../assets/option.png";
+import newCar from "../assets/newcar.png";
+import carFleet from "../assets/carfleet.png";
+import classic from "../assets/classic.png";
 import Navbar from "./Navbar";
 import FiltersSidebar from "./FiltersSidebar";
 import CarImageModal from "./CarImageModal";
@@ -285,12 +285,12 @@ const Dashboard = () => {
                                 <>
                                     <h2 className="text-3xl font-bold mb-6 flex items-center bg-yellow-100 p-2 rounded shadow">
                                         <img
-                                            src={star}
-                                            alt="Star Icon"
-                                            className="mr-2 w-8 h-8"
+                                            src={carFleet}
+                                            alt="Car Fleet Icon"
+                                            className="mr-4 w-8 h-8"
                                         />
                                         {/* <FaStar className="mr-2 text-yellow-500" /> */}
-                                        Featured Cars
+                                        Premium Fleet
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {renderVehicles(
@@ -310,12 +310,12 @@ const Dashboard = () => {
                                         } flex items-center bg-orange-100 p-2 rounded shadow`}
                                     >
                                         <img
-                                            src={newIcon}
-                                            alt="New Icon"
-                                            className="mr-2 w-8 h-8"
+                                            src={newCar}
+                                            alt="New Car Icon"
+                                            className="mr-4 w-10 h-10"
                                         />
                                         {/* <FaRegClock className="mr-2 text-blue-500" /> */}
-                                        New Arrivals
+                                        Latest Additions
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {renderVehicles(newArrivalCars, "New")}
@@ -333,12 +333,12 @@ const Dashboard = () => {
                                         } flex items-center bg-green-100 p-2 rounded shadow`}
                                     >
                                         <img
-                                            src={option}
-                                            alt="Option Icon"
-                                            className="mr-2 w-8 h-8"
+                                            src={classic}
+                                            alt="Classic Icon"
+                                            className="mr-4 w-8 h-8"
                                         />
                                         {/* <FaCar className="mr-2 text-green-500" /> */}
-                                        Other Options
+                                        Classic Collection
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {renderVehicles(otherOptions)}
@@ -381,6 +381,7 @@ const DashboardPage = () => (
 );
 
 export default DashboardPage;
+
 
 
 
