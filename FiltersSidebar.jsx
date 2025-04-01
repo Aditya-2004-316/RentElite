@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 import { vehicles } from "../data/vehicles";
-import { FaSearch } from "react-icons/fa";
-import { FaDollarSign } from "react-icons/fa";
+// import {
+//     FaSearch,
+//     FaDollarSign,
+//     FaFilter,
+//     FaCar,
+//     FaGasPump,
+//     FaCogs,
+//     FaCarSide,
+// } from "react-icons/fa";
+import { FaSearch, FaDollarSign } from "react-icons/fa";
+import filter from "../assets/filter.jpg";
+import carCompany from "../assets/carcompany.png";
+import price from "../assets/price.png";
+import fuel from "../assets/fuel.png";
+import transmission from "../assets/transmission.png";
+import carType from "../assets/cartype.png";
 
 const fuelTypes = ["Petrol", "Electric", "Hybrid"];
 const transmissions = ["Automatic", "Manual"];
@@ -14,7 +28,7 @@ const companies = [
     ...new Set(vehicles.map((vehicle) => vehicle.company).filter(Boolean)),
 ];
 
-const FiltersSidebar = ({ onFilterChange }) => {
+const FiltersSidebar = ({ onFilterChange, darkMode }) => {
     const [selectedCompany, setSelectedCompany] = useState("");
     const [selectedFuelType, setSelectedFuelType] = useState("");
     const [selectedTransmission, setSelectedTransmission] = useState("");
@@ -107,10 +121,18 @@ const FiltersSidebar = ({ onFilterChange }) => {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-4 w-80">
-            {" "}
-            {/* Added ml-1 for left margin */}
-            <h2 className="text-2xl font-bold mb-4">Filters</h2>
+        <div
+            className={`${
+                darkMode ? "bg-dark-card text-dark-text" : "bg-white"
+            } shadow-md rounded-lg p-4 w-80`}
+        >
+            {/* Heading with Filter Icon */}
+            <div className="flex items-center space-x-2 mb-4">
+                {/* <FaFilter className="text-2xl text-emerald-600" /> */}
+                <img src={filter} alt="Filter" className="w-6 h-6" />
+                <h2 className="text-2xl font-bold">Filters</h2>
+            </div>
+
             {/* Search Input with Icon */}
             <div className="mb-4 relative">
                 <input
@@ -118,17 +140,34 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     value={searchTerm}
                     onChange={handleSearchChange}
                     placeholder="Search by company..."
-                    className="border border-gray-300 rounded-lg w-full p-2 pr-10"
+                    className={`border ${
+                        darkMode
+                            ? "border-dark-lighter bg-dark-lighter text-dark-text"
+                            : "border-gray-300"
+                    } rounded-lg w-full p-2 pr-10`}
                 />
                 <FaSearch className="absolute right-3 top-2.5 text-gray-500 cursor-pointer" />
+                {/* <img src={search} alt="Search" className="w-6 h-6" /> */}
             </div>
+
+            {/* Car Company with Icon */}
             <div className="mb-4">
-                <label className="block text-lg font-medium mb-2">
-                    Car Company
+                <label className="block text-lg font-medium mb-2 flex items-center space-x-2">
+                    {/* <FaCar className="text-emerald-600" /> */}
+                    <img
+                        src={carCompany}
+                        alt="Car Company"
+                        className="w-6 h-6"
+                    />
+                    <span>Car Company</span>
                 </label>
                 <select
                     onChange={handleCompanyChange}
-                    className="border border-gray-300 rounded-lg w-full p-2"
+                    className={`border ${
+                        darkMode
+                            ? "border-dark-lighter bg-dark-lighter text-dark-text"
+                            : "border-gray-300"
+                    } rounded-lg w-full p-2`}
                 >
                     <option value="">All</option>
                     {searchFilteredCompanies.map((company) => (
@@ -138,9 +177,13 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     ))}
                 </select>
             </div>
+
+            {/* Price Range with Icon */}
             <div className="mb-4 relative">
-                <label className="block text-lg font-medium mb-2">
-                    Price Range
+                <label className="block text-lg font-medium mb-2 flex items-center space-x-2">
+                    {/* <FaDollarSign className="text-emerald-600" /> */}
+                    <img src={price} alt="Price" className="w-6 h-6" />
+                    <span>Price Range</span>
                 </label>
                 <div className="relative">
                     <input
@@ -155,7 +198,7 @@ const FiltersSidebar = ({ onFilterChange }) => {
                         className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-10"
                         style={{ left: `${(priceRange / 600) * 100}%` }}
                     >
-                        <FaDollarSign className="text-green-500" />
+                        <FaDollarSign className="text-emerald-600" />
                     </div>
                 </div>
                 <span className="text-sm mt-2 block">
@@ -200,13 +243,21 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     `}
                 </style>
             </div>
+
+            {/* Fuel Type with Icon */}
             <div className="mb-4">
-                <label className="block text-lg font-medium mb-2">
-                    Fuel Type
+                <label className="block text-lg font-medium mb-2 flex items-center space-x-2">
+                    {/* <FaGasPump className="text-emerald-600" /> */}
+                    <img src={fuel} alt="Fuel" className="w-6 h-6" />
+                    <span>Fuel Type</span>
                 </label>
                 <select
                     onChange={handleFuelTypeChange}
-                    className="border border-gray-300 rounded-lg w-full p-2"
+                    className={`border ${
+                        darkMode
+                            ? "border-dark-lighter bg-dark-lighter text-dark-text"
+                            : "border-gray-300"
+                    } rounded-lg w-full p-2`}
                 >
                     <option value="">All</option>
                     {fuelTypes.map((fuel) => (
@@ -216,13 +267,25 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     ))}
                 </select>
             </div>
+
+            {/* Transmission with Icon */}
             <div className="mb-4">
-                <label className="block text-lg font-medium mb-2">
-                    Transmission
+                <label className="block text-lg font-medium mb-2 flex items-center space-x-2">
+                    {/* <FaCogs className="text-emerald-600" /> */}
+                    <img
+                        src={transmission}
+                        alt="Transmission"
+                        className="w-6 h-6"
+                    />
+                    <span>Transmission</span>
                 </label>
                 <select
                     onChange={handleTransmissionChange}
-                    className="border border-gray-300 rounded-lg w-full p-2"
+                    className={`border ${
+                        darkMode
+                            ? "border-dark-lighter bg-dark-lighter text-dark-text"
+                            : "border-gray-300"
+                    } rounded-lg w-full p-2`}
                 >
                     <option value="">All</option>
                     {transmissions.map((transmission) => (
@@ -232,13 +295,21 @@ const FiltersSidebar = ({ onFilterChange }) => {
                     ))}
                 </select>
             </div>
+
+            {/* Car Type with Icon */}
             <div className="mb-4">
-                <label className="block text-lg font-medium mb-2">
-                    Car Type
+                <label className="block text-lg font-medium mb-2 flex items-center space-x-2">
+                    {/* <FaCarSide className="text-emerald-600" /> */}
+                    <img src={carType} alt="Car Type" className="w-6 h-6" />
+                    <span>Car Type</span>
                 </label>
                 <select
                     onChange={handleCarTypeChange}
-                    className="border border-gray-300 rounded-lg w-full p-2"
+                    className={`border ${
+                        darkMode
+                            ? "border-dark-lighter bg-dark-lighter text-dark-text"
+                            : "border-gray-300"
+                    } rounded-lg w-full p-2`}
                 >
                     <option value="">All</option>
                     {carTypes.map((type) => (
@@ -253,4 +324,5 @@ const FiltersSidebar = ({ onFilterChange }) => {
 };
 
 export default FiltersSidebar;
+
 
