@@ -8,19 +8,32 @@ import {
     FavouritesProvider,
 } from "../context/FavouritesContext";
 import CarDetailsModal from "./CarDetailsModal";
+import ChatBot from "./ChatBot";
 // import "../styles/modal.css"; // Import the modal styles
 
 const Favourites = () => {
     const { favorites, setFavorites } = useContext(FavouritesContext);
     const [selectedCar, setSelectedCar] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { darkMode } = useContext(FavouritesContext);
+    const [notification, setNotification] = useState(null);
+    const [notificationVisible, setNotificationVisible] = useState(false);
 
     const favoriteCars = vehicles.filter((car) => favorites[car.id]);
 
-    const removeFavorite = (carId) => {
+    const showNotification = (message) => {
+        setNotification(message);
+        setNotificationVisible(true);
+        setTimeout(() => {
+            setNotificationVisible(false);
+        }, 3000);
+    };
+
+    const removeFavorite = (carId, carName) => {
         setFavorites((prevFavorites) => {
             const updatedFavorites = { ...prevFavorites };
             delete updatedFavorites[carId];
+            showNotification(`${carName} removed from favourites`);
             return updatedFavorites;
         });
         setIsModalOpen(false);
@@ -37,16 +50,26 @@ const Favourites = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-emerald-50">
+        <div
+            className={`min-h-screen flex flex-col ${
+                darkMode ? "bg-dark text-dark-text" : "bg-emerald-50"
+            }`}
+        >
             <div className="fixed top-0 left-0 right-0 z-10">
                 <Navbar />
             </div>
-            <div className="flex-grow mt-24 p-4 ml-24">
+            <div className={`flex-grow mt-24 p-4 ml-24`}>
                 <h2 className="text-4xl font-bold mb-8 flex items-center">
                     Favourites
                 </h2>
                 {favoriteCars.length === 0 ? (
-                    <p className="text-gray-600 text-center">
+                    <p
+                        className={
+                            darkMode
+                                ? "text-dark-muted text-center"
+                                : "text-gray-600 text-center"
+                        }
+                    >
                         No favourite cars added.
                     </p>
                 ) : (
@@ -54,7 +77,11 @@ const Favourites = () => {
                         {favoriteCars.map((car) => (
                             <div
                                 key={car.id}
-                                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105 relative group cursor-pointer"
+                                className={`rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105 relative group cursor-pointer ${
+                                    darkMode
+                                        ? "bg-dark-card text-dark-text border border-dark-border"
+                                        : "bg-white"
+                                }`}
                                 onClick={() => openModal(car)}
                             >
                                 <img
@@ -66,7 +93,13 @@ const Favourites = () => {
                                     <h3 className="text-xl font-bold mb-2">
                                         {car.name}
                                     </h3>
-                                    <p className="text-gray-600 mb-2">
+                                    <p
+                                        className={`mb-2 ${
+                                            darkMode
+                                                ? "text-dark-muted"
+                                                : "text-gray-600"
+                                        }`}
+                                    >
                                         {car.type}
                                     </p>
                                     <div className="flex items-center justify-between">
@@ -76,7 +109,10 @@ const Favourites = () => {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                removeFavorite(car.id);
+                                                removeFavorite(
+                                                    car.id,
+                                                    car.name
+                                                );
                                             }}
                                             className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition-colors"
                                         >
@@ -96,6 +132,21 @@ const Favourites = () => {
                 removeFavorite={removeFavorite}
             />
             <Footer />
+
+            {/* Add the notification toast with higher z-index */}
+            {notificationVisible && notification && (
+                <div
+                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[100] flex items-center space-x-2 ${
+                        notificationVisible
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-10 opacity-0"
+                    }`}
+                >
+                    <span className="text-xl">✓</span>
+                    <span>{notification}</span>
+                </div>
+            )}
+            <ChatBot />
         </div>
     );
 };
@@ -107,5 +158,6 @@ const FavouritesPage = () => (
 );
 
 export default FavouritesPage;
+
 
 
