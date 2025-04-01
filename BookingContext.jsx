@@ -1,42 +1,38 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const AuthContext = createContext(null);
+const BookingContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+export const useBookings = () => {
+    return useContext(BookingContext);
+};
+
+export const BookingProvider = ({ children }) => {
+    const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        const userId = localStorage.getItem("userId");
-
-        if (token && userId) {
-            setUser({ id: userId });
-        }
-        setLoading(false);
+        const savedBookings =
+            JSON.parse(localStorage.getItem("bookings")) || [];
+        setBookings(savedBookings);
     }, []);
 
-    const login = (userData) => {
-        localStorage.setItem("token", userData.token);
-        localStorage.setItem("userId", userData.userId);
-        setUser({ id: userData.userId });
+    const addBooking = (booking) => {
+        const updatedBookings = [...bookings, booking];
+        setBookings(updatedBookings);
+        localStorage.setItem("bookings", JSON.stringify(updatedBookings));
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        setUser(null);
+    const cancelBooking = (id) => {
+        const updatedBookings = bookings.filter((booking) => booking.id !== id);
+        setBookings(updatedBookings);
+        localStorage.setItem("bookings", JSON.stringify(updatedBookings));
     };
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <BookingContext.Provider
+            value={{ bookings, addBooking, cancelBooking, setBookings }}
+        >
             {children}
-        </AuthContext.Provider>
+        </BookingContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
