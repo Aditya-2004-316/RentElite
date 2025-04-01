@@ -88,3 +88,4 @@ const CarDetailsModal = ({ isOpen, onRequestClose, car, removeFavorite }) => {
 };
 
 export default CarDetailsModal;
+
