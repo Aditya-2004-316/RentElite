@@ -15,6 +15,8 @@ import {
 } from "../context/FavouritesContext";
 import { v4 as uuidv4 } from "uuid";
 import Footer from "./Footer";
+import { useSettings } from "../context/SettingsContext";
+import ChatBot from "./ChatBot";
 
 const companyNameMappings = {
     Mercedes: "Mercedes",
@@ -53,8 +55,11 @@ const Dashboard = () => {
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedBookingCar, setSelectedBookingCar] = useState(null);
     const [notification, setNotification] = useState("");
+    const [notificationVisible, setNotificationVisible] = useState(false);
     const { bookings, addBooking } = useBookings();
     const { favorites, setFavorites } = useContext(FavouritesContext);
+    const [darkMode, setDarkMode] = useState(false);
+    const { translate, formatCurrency } = useSettings();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -152,6 +157,14 @@ const Dashboard = () => {
         setIsBookingModalOpen(true);
     };
 
+    const showNotification = (message) => {
+        setNotification(message);
+        setNotificationVisible(true);
+        setTimeout(() => {
+            setNotificationVisible(false);
+        }, 3000);
+    };
+
     const handleBookingConfirm = (bookingDetails) => {
         const { startDate, endDate, totalPrice } = bookingDetails;
         const newBooking = {
@@ -164,6 +177,15 @@ const Dashboard = () => {
         addBooking(newBooking);
         setIsBookingModalOpen(false);
         setSelectedBookingCar(null);
+
+        // Show success notification
+        showNotification(
+            `Successfully booked ${selectedBookingCar.name} from ${new Date(
+                startDate
+            ).toLocaleDateString()} to ${new Date(
+                endDate
+            ).toLocaleDateString()}`
+        );
     };
 
     const handleBookingClose = () => {
@@ -177,10 +199,11 @@ const Dashboard = () => {
             setNotification(
                 `${carName} ${
                     isFavorite ? "added to" : "removed from"
-                } favourites.`
+                } favourites`
             );
+            setNotificationVisible(true);
             setTimeout(() => {
-                setNotification("");
+                setNotificationVisible(false);
             }, 3000);
             return {
                 ...prevFavorites,
@@ -193,7 +216,9 @@ const Dashboard = () => {
         return vehicles.map((car) => (
             <div
                 key={car.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 hover:scale-105 relative group"
+                className={`bg-white rounded-lg shadow-md overflow-hidden ${
+                    darkMode ? "bg-dark-card text-dark-text" : ""
+                } transform transition-transform duration-300 hover:scale-105 relative group`}
             >
                 <img
                     src={car.image}
@@ -201,11 +226,17 @@ const Dashboard = () => {
                     className="w-full h-48 object-cover"
                     onClick={() => handleCarClick(car)}
                 />
-                {label && (
-                    <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs py-1 px-2 rounded hidden group-hover:block">
-                        {label}
-                    </div>
-                )}
+                <div
+                    className={`absolute top-2 right-2 text-white text-xs py-1 px-2 rounded hidden group-hover:block ${
+                        label === "Featured"
+                            ? "bg-yellow-500"
+                            : label === "New"
+                            ? "bg-orange-500"
+                            : "bg-green-500"
+                    }`}
+                >
+                    {label || "Classic"}
+                </div>
                 <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                         <h3 className="text-xl font-bold">{car.name}</h3>
@@ -222,7 +253,7 @@ const Dashboard = () => {
                     <p className="text-gray-600 mb-2">{car.type}</p>
                     <div className="flex items-center justify-between">
                         <p className="text-[#0fa16d] font-bold text-lg">
-                            ${car.price}/day
+                            {formatCurrency(car.price)}/day
                         </p>
                         <button
                             onClick={() => handleBooking(car)}
@@ -259,7 +290,11 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-emerald-50">
+        <div
+            className={`min-h-screen ${
+                darkMode ? "bg-dark" : "bg-emerald-50"
+            } flex flex-col`}
+        >
             <div className="fixed top-0 left-0 right-0 z-10">
                 <Navbar />
             </div>
@@ -287,9 +322,8 @@ const Dashboard = () => {
                                         <img
                                             src={carFleet}
                                             alt="Car Fleet Icon"
-                                            className="mr-4 w-8 h-8"
+                                            className="mr-4 w-10 h-10"
                                         />
-                                        {/* <FaStar className="mr-2 text-yellow-500" /> */}
                                         Premium Fleet
                                     </h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -364,12 +398,20 @@ const Dashboard = () => {
                     onConfirm={handleBookingConfirm}
                 />
             )}
-            {notification && (
-                <div className="fixed bottom-4 right-4 bg-green-600 text-white py-2 px-4 rounded shadow-lg">
-                    {notification}
+            {notificationVisible && notification && (
+                <div
+                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[60] flex items-center space-x-2 ${
+                        notificationVisible
+                            ? "translate-y-0 opacity-100"
+                            : "translate-y-10 opacity-0"
+                    }`}
+                >
+                    <span className="text-xl">✓</span>
+                    <span>{notification}</span>
                 </div>
             )}
             <Footer />
+            <ChatBot />
         </div>
     );
 };
@@ -381,6 +423,7 @@ const DashboardPage = () => (
 );
 
 export default DashboardPage;
+
 
 
 
