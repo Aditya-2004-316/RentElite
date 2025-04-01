@@ -15,72 +15,8 @@ import {
     FaTrash,
 } from "react-icons/fa";
 import styled from "styled-components";
-
-// Styled Components
-const ProfileContainer = styled.div`
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1rem;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const TabsContainer = styled.div`
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 1rem;
-`;
-
-const TabButton = styled.button`
-    padding: 0.5rem 1rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: ${(props) => (props.active ? "#2563eb" : "#666")};
-    border-bottom: ${(props) => (props.active ? "2px solid #2563eb" : "none")};
-    transition: color 0.3s;
-`;
-
-const FormGroup = styled.div`
-    margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #374151;
-`;
-
-const Input = styled.input`
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: ${(props) => (props.disabled ? "#f3f4f6" : "white")};
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "text")};
-`;
-
-const TextArea = styled.textarea`
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: ${(props) => (props.disabled ? "#f3f4f6" : "white")};
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "text")};
-`;
-
-const ButtonGroup = styled.div`
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-`;
+import { useSettings } from "../context/SettingsContext";
+import ChatBot from "./ChatBot";
 
 const Button = styled.button`
     padding: 0.5rem 1rem;
@@ -95,7 +31,7 @@ const Button = styled.button`
         background-color: ${(props) => {
             switch (props.buttonType) {
                 case "edit":
-                    return "#1d4ed8";
+                    return "#047857";
                 case "save":
                     return "#047857";
                 case "cancel":
@@ -109,7 +45,7 @@ const Button = styled.button`
     background-color: ${(props) => {
         switch (props.buttonType) {
             case "edit":
-                return "#2563eb";
+                return "#059669";
             case "save":
                 return "#059669";
             case "cancel":
@@ -121,6 +57,17 @@ const Button = styled.button`
 `;
 
 const Profile = () => {
+    const {
+        darkMode,
+        setDarkMode,
+        currency,
+        setCurrency,
+        language,
+        setLanguage,
+        translate,
+        formatCurrency,
+    } = useSettings();
+
     const [activeTab, setActiveTab] = useState("personal");
     const [isEditing, setIsEditing] = useState(false);
     const [showAddPayment, setShowAddPayment] = useState(false);
@@ -136,31 +83,35 @@ const Profile = () => {
     const [notification, setNotification] = useState(null);
     const [notificationVisible, setNotificationVisible] = useState(false);
 
-    // Initialize state with data from localStorage
+    // Modify the initial userData state setup
     const [userData, setUserData] = useState(() => {
-        const savedData = localStorage.getItem("userData");
-        return savedData
-            ? JSON.parse(savedData)
-            : {
-                  name: "",
-                  email: "",
-                  phone: "",
-                  address: "",
-                  license: "",
-                  joinDate: new Date().toLocaleDateString("en-US", {
-                      month: "long",
-                      year: "numeric",
-                  }),
-                  // Preferences tab checkboxes
-                  emailNotifications: false,
-                  smsNotifications: false,
-                  // Settings tab checkboxes
-                  darkMode: false,
-                  profileVisibility: false,
-                  activityStatus: false,
-                  language: "english",
-                  currency: "usd",
-              };
+        const userEmail = localStorage.getItem("userEmail");
+        // Try to get user-specific data using email as key
+        const savedUserData = localStorage.getItem(`userData_${userEmail}`);
+
+        if (savedUserData && userEmail) {
+            return JSON.parse(savedUserData);
+        }
+
+        // Default state if no saved data exists
+        return {
+            name: "",
+            email: userEmail || "",
+            phone: "",
+            address: "",
+            license: "",
+            joinDate: new Date().toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+            }),
+            emailNotifications: false,
+            smsNotifications: false,
+            darkMode: false,
+            profileVisibility: false,
+            activityStatus: false,
+            language: "english",
+            currency: "usd",
+        };
     });
 
     const [editedData, setEditedData] = useState({ ...userData });
@@ -172,27 +123,20 @@ const Profile = () => {
     });
 
     // Add these new states for settings
-    const [darkMode, setDarkMode] = useState(false);
-    const [language, setLanguage] = useState("english");
-    const [currency, setCurrency] = useState("usd");
-
     const [preferences, setPreferences] = useState([]);
     const [preferencesChanged, setPreferencesChanged] = useState(false);
     const [settingsChanged, setSettingsChanged] = useState(false);
 
-    // Load user data from localStorage when component mounts
+    // Modify the useEffect that handles user data persistence
     useEffect(() => {
-        const savedData = localStorage.getItem("userData");
-        if (savedData) {
-            const parsedData = JSON.parse(savedData);
-            setUserData(parsedData);
-            setEditedData(parsedData);
+        const userEmail = localStorage.getItem("userEmail");
+        if (userEmail) {
+            // Save user data with email-specific key
+            localStorage.setItem(
+                `userData_${userEmail}`,
+                JSON.stringify(userData)
+            );
         }
-    }, []);
-
-    // Save user data to localStorage whenever it changes
-    useEffect(() => {
-        localStorage.setItem("userData", JSON.stringify(userData));
     }, [userData]);
 
     const handleEdit = () => {
@@ -200,8 +144,9 @@ const Profile = () => {
         setEditedData({ ...userData });
     };
 
+    // Modify the handleSave function
     const handleSave = () => {
-        // Validate required fields
+        // Existing validation checks...
         if (!editedData.name || !editedData.email || !editedData.phone) {
             showNotification(
                 "Please fill in all required fields (Name, Email, and Phone)"
@@ -209,23 +154,32 @@ const Profile = () => {
             return;
         }
 
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(editedData.email)) {
             showNotification("Please enter a valid email address");
             return;
         }
 
-        // Validate phone number (basic validation)
         const phoneRegex = /^\+?[\d\s-]{10,}$/;
         if (!phoneRegex.test(editedData.phone)) {
             showNotification("Please enter a valid phone number");
             return;
         }
 
-        setUserData({ ...editedData });
+        // Update the userData state with edited data
+        const updatedData = { ...editedData };
+        setUserData(updatedData);
         setIsEditing(false);
-        localStorage.setItem("userData", JSON.stringify(editedData));
+
+        // Save to localStorage with email-specific key
+        const userEmail = localStorage.getItem("userEmail");
+        if (userEmail) {
+            localStorage.setItem(
+                `userData_${userEmail}`,
+                JSON.stringify(updatedData)
+            );
+        }
+
         showNotification("Changes saved successfully!");
     };
 
@@ -469,12 +423,293 @@ const Profile = () => {
         setEditedData(userData);
     }, []);
 
+    // Update the settings tab section
+    const renderSettingsTab = () => (
+        <div
+            className={`space-y-8 ${
+                darkMode ? "text-dark-text" : "text-gray-700"
+            }`}
+        >
+            <div>
+                <h3 className="text-lg font-semibold mb-4">
+                    {translate("settings")}
+                </h3>
+                <div className="space-y-4">
+                    {/* Dark Mode Toggle */}
+                    <div className="flex items-center justify-between">
+                        <span>{translate("darkMode")}</span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={darkMode}
+                                onChange={(e) => {
+                                    setDarkMode(e.target.checked);
+                                    handleSettingsChange(
+                                        "darkMode",
+                                        e.target.checked
+                                    );
+                                }}
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div>
+
+                    {/* Profile Visibility */}
+                    <div className="flex items-center justify-between">
+                        <span>Profile Visibility</span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={editedData.profileVisibility}
+                                onChange={(e) =>
+                                    handleSettingsChange(
+                                        "profileVisibility",
+                                        e.target.checked
+                                    )
+                                }
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div>
+
+                    {/* Activity Status */}
+                    <div className="flex items-center justify-between">
+                        <span>Show Activity Status</span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={editedData.activityStatus}
+                                onChange={(e) =>
+                                    handleSettingsChange(
+                                        "activityStatus",
+                                        e.target.checked
+                                    )
+                                }
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div>
+
+                    {/* Email Notifications */}
+                    {/* <div className="flex items-center justify-between">
+                        <span>Email Notifications</span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={editedData.emailNotifications}
+                                onChange={(e) =>
+                                    handleSettingsChange(
+                                        "emailNotifications",
+                                        e.target.checked
+                                    )
+                                }
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div> */}
+
+                    {/* SMS Notifications */}
+                    {/* <div className="flex items-center justify-between">
+                        <span>SMS Notifications</span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                className="sr-only peer"
+                                checked={editedData.smsNotifications}
+                                onChange={(e) =>
+                                    handleSettingsChange(
+                                        "smsNotifications",
+                                        e.target.checked
+                                    )
+                                }
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                        </label>
+                    </div> */}
+
+                    {/* Language Selection */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            {translate("language")}
+                        </label>
+                        <select
+                            value={language}
+                            onChange={(e) => {
+                                setLanguage(e.target.value);
+                                handleSettingsChange(
+                                    "language",
+                                    e.target.value
+                                );
+                            }}
+                            className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                darkMode
+                                    ? "bg-dark-card border-dark-border text-dark-text"
+                                    : "bg-white"
+                            }`}
+                        >
+                            <option value="english">English</option>
+                            <option value="spanish">Español</option>
+                            <option value="french">Français</option>
+                            <option value="hindi">हिंदी</option>
+                        </select>
+                    </div>
+
+                    {/* Currency Selection */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">
+                            {translate("currency")}
+                        </label>
+                        <select
+                            value={currency}
+                            onChange={(e) => {
+                                setCurrency(e.target.value);
+                                handleSettingsChange(
+                                    "currency",
+                                    e.target.value
+                                );
+                            }}
+                            className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                darkMode
+                                    ? "bg-dark-card border-dark-border text-dark-text"
+                                    : "bg-white"
+                            }`}
+                        >
+                            <option value="usd">USD ($)</option>
+                            <option value="eur">EUR (€)</option>
+                            <option value="gbp">GBP (£)</option>
+                            <option value="inr">INR (₹)</option>
+                        </select>
+                    </div>
+
+                    {/* Privacy Settings Section */}
+                    <div className="mt-8">
+                        <h4 className="text-lg font-semibold mb-4">
+                            Privacy Settings
+                        </h4>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">
+                                    Who can see my profile
+                                </label>
+                                <select
+                                    value={
+                                        editedData.profilePrivacy || "everyone"
+                                    }
+                                    onChange={(e) =>
+                                        handleSettingsChange(
+                                            "profilePrivacy",
+                                            e.target.value
+                                        )
+                                    }
+                                    className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                        darkMode
+                                            ? "bg-dark-card border-dark-border text-dark-text"
+                                            : "bg-white"
+                                    }`}
+                                >
+                                    <option value="everyone">Everyone</option>
+                                    <option value="contacts">
+                                        Contacts Only
+                                    </option>
+                                    <option value="private">Private</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Security Settings Section */}
+                    <div className="mt-8">
+                        <h4 className="text-lg font-semibold mb-4">
+                            Security Settings
+                        </h4>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <span>Two-Factor Authentication</span>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="sr-only peer"
+                                        checked={editedData.twoFactorAuth}
+                                        onChange={(e) =>
+                                            handleSettingsChange(
+                                                "twoFactorAuth",
+                                                e.target.checked
+                                            )
+                                        }
+                                    />
+                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Save Button */}
+            {settingsChanged && (
+                <div className="flex justify-end mt-6">
+                    <button
+                        onClick={handleSettingsSave}
+                        className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
+                    >
+                        <FaSave />
+                        <span>{translate("save")}</span>
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+
+    // Add a cleanup effect to handle user logout
+    useEffect(() => {
+        const handleStorageChange = (e) => {
+            if (e.key === "userEmail" && !e.newValue) {
+                // User logged out, clear the current state
+                setUserData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    address: "",
+                    license: "",
+                    joinDate: new Date().toLocaleDateString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                    }),
+                    emailNotifications: false,
+                    smsNotifications: false,
+                    darkMode: false,
+                    profileVisibility: false,
+                    activityStatus: false,
+                    language: "english",
+                    currency: "usd",
+                });
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, []);
+
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Navbar />
-            <div className="max-w-7xl mx-auto px-4 py-8">
+        <div
+            className={`min-h-screen ${
+                darkMode ? "bg-dark text-dark-text" : "bg-gray-50 text-gray-900"
+            }`}
+        >
+            <div className="fixed top-0 left-0 right-0 z-10">
+                <Navbar />
+            </div>
+            <div className="max-w-7xl mx-auto px-4 py-8 mt-24">
                 {/* Profile Header */}
-                <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <div
+                    className={`rounded-lg shadow-lg p-6 mb-8 ${
+                        darkMode ? "bg-dark-lighter text-dark-text" : "bg-white"
+                    }`}
+                >
                     <div className="flex items-center space-x-6">
                         <div className="w-24 h-24 bg-emerald-600 rounded-full flex items-center justify-center">
                             <span className="text-4xl text-white font-bold">
@@ -482,10 +717,22 @@ const Profile = () => {
                             </span>
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1
+                                className={`text-2xl font-bold ${
+                                    darkMode
+                                        ? "text-dark-text"
+                                        : "text-gray-900"
+                                }`}
+                            >
                                 {userData.name || "Your Name"}
                             </h1>
-                            <p className="text-gray-600">
+                            <p
+                                className={
+                                    darkMode
+                                        ? "text-dark-muted"
+                                        : "text-gray-600"
+                                }
+                            >
                                 Member since {userData.joinDate}
                             </p>
                         </div>
@@ -493,8 +740,12 @@ const Profile = () => {
                 </div>
 
                 {/* Profile Navigation */}
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-                    <div className="flex border-b">
+                <div
+                    className={`${
+                        darkMode ? "bg-dark-lighter" : "bg-white"
+                    } rounded-lg shadow-lg overflow-hidden mb-8`}
+                >
+                    <div className="flex border-b border-gray-200 dark:border-dark-border">
                         <button
                             onClick={() => setActiveTab("personal")}
                             className={`flex-1 py-4 px-6 text-center ${
@@ -555,7 +806,7 @@ const Profile = () => {
                                     <FaUser className="text-emerald-600 text-xl" />
                                     <div className="flex-1">
                                         <p className="text-sm text-gray-500">
-                                            Full Name
+                                            {translate("fullName")}
                                         </p>
                                         {isEditing ? (
                                             <input
@@ -567,10 +818,20 @@ const Profile = () => {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                                    darkMode
+                                                        ? "bg-dark-card border-dark-border text-dark-text"
+                                                        : "bg-white"
+                                                }`}
                                             />
                                         ) : (
-                                            <p className="text-gray-900">
+                                            <p
+                                                className={
+                                                    darkMode
+                                                        ? "text-dark-text"
+                                                        : "text-gray-900"
+                                                }
+                                            >
                                                 {userData.name || "Not set"}
                                             </p>
                                         )}
@@ -580,7 +841,7 @@ const Profile = () => {
                                     <FaEnvelope className="text-emerald-600 text-xl" />
                                     <div className="flex-1">
                                         <p className="text-sm text-gray-500">
-                                            Email
+                                            {translate("email")}
                                         </p>
                                         {isEditing ? (
                                             <input
@@ -592,10 +853,20 @@ const Profile = () => {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                                    darkMode
+                                                        ? "bg-dark-card border-dark-border text-dark-text"
+                                                        : "bg-white"
+                                                }`}
                                             />
                                         ) : (
-                                            <p className="text-gray-900">
+                                            <p
+                                                className={
+                                                    darkMode
+                                                        ? "text-dark-text"
+                                                        : "text-gray-900"
+                                                }
+                                            >
                                                 {userData.email || "Not set"}
                                             </p>
                                         )}
@@ -605,7 +876,7 @@ const Profile = () => {
                                     <FaPhone className="text-emerald-600 text-xl" />
                                     <div className="flex-1">
                                         <p className="text-sm text-gray-500">
-                                            Phone
+                                            {translate("phone")}
                                         </p>
                                         {isEditing ? (
                                             <input
@@ -617,10 +888,20 @@ const Profile = () => {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                                    darkMode
+                                                        ? "bg-dark-card border-dark-border text-dark-text"
+                                                        : "bg-white"
+                                                }`}
                                             />
                                         ) : (
-                                            <p className="text-gray-900">
+                                            <p
+                                                className={
+                                                    darkMode
+                                                        ? "text-dark-text"
+                                                        : "text-gray-900"
+                                                }
+                                            >
                                                 {userData.phone || "Not set"}
                                             </p>
                                         )}
@@ -630,7 +911,7 @@ const Profile = () => {
                                     <FaMapMarkerAlt className="text-emerald-600 text-xl" />
                                     <div className="flex-1">
                                         <p className="text-sm text-gray-500">
-                                            Address
+                                            {translate("address")}
                                         </p>
                                         {isEditing ? (
                                             <input
@@ -642,10 +923,20 @@ const Profile = () => {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                                    darkMode
+                                                        ? "bg-dark-card border-dark-border text-dark-text"
+                                                        : "bg-white"
+                                                }`}
                                             />
                                         ) : (
-                                            <p className="text-gray-900">
+                                            <p
+                                                className={
+                                                    darkMode
+                                                        ? "text-dark-text"
+                                                        : "text-gray-900"
+                                                }
+                                            >
                                                 {userData.address || "Not set"}
                                             </p>
                                         )}
@@ -655,7 +946,7 @@ const Profile = () => {
                                     <FaIdCard className="text-emerald-600 text-xl" />
                                     <div className="flex-1">
                                         <p className="text-sm text-gray-500">
-                                            Driver's License
+                                            {translate("driversLicense")}
                                         </p>
                                         {isEditing ? (
                                             <input
@@ -667,10 +958,20 @@ const Profile = () => {
                                                         e.target.value
                                                     )
                                                 }
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
+                                                    darkMode
+                                                        ? "bg-dark-card border-dark-border text-dark-text"
+                                                        : "bg-white"
+                                                }`}
                                             />
                                         ) : (
-                                            <p className="text-gray-900">
+                                            <p
+                                                className={
+                                                    darkMode
+                                                        ? "text-dark-text"
+                                                        : "text-gray-900"
+                                                }
+                                            >
                                                 {userData.license || "Not set"}
                                             </p>
                                         )}
@@ -686,24 +987,27 @@ const Profile = () => {
                                                 className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                                             >
                                                 <FaTimes />
-                                                <span>Cancel</span>
+                                                <span>
+                                                    {translate("cancel")}
+                                                </span>
                                             </button>
                                             <button
                                                 onClick={handleSave}
                                                 className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
                                             >
                                                 <FaSave />
-                                                <span>Save Changes</span>
+                                                <span>
+                                                    {translate("saveChanges")}
+                                                </span>
                                             </button>
                                         </>
                                     ) : (
-                                        <button
+                                        <Button
+                                            buttonType="edit"
                                             onClick={handleEdit}
-                                            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
                                         >
-                                            <FaEdit />
-                                            <span>Edit Profile</span>
-                                        </button>
+                                            {translate("editProfile")}
+                                        </Button>
                                     )}
                                 </div>
                             </div>
@@ -713,7 +1017,7 @@ const Profile = () => {
                             <div>
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-lg font-semibold">
-                                        Total Rentals:{" "}
+                                        {translate("totalRentals")}:{" "}
                                         {rentalHistory.length - 1}
                                     </h3>
                                     <button
@@ -723,12 +1027,12 @@ const Profile = () => {
                                         className="text-emerald-600 hover:text-emerald-700"
                                     >
                                         {showAllRentals
-                                            ? "Show Less"
-                                            : "View All"}
+                                            ? translate("showLess")
+                                            : translate("viewAll")}
                                     </button>
                                 </div>
                                 {rentalHistory.length === 0 ? (
-                                    <p>No rental history available.</p>
+                                    <p>{translate("noBookings")}</p>
                                 ) : (
                                     <ul className="space-y-4">
                                         {rentalHistory
@@ -756,21 +1060,32 @@ const Profile = () => {
                                                     </h3>
                                                     <p className="text-gray-700">
                                                         <span className="font-semibold">
-                                                            Start Date:
+                                                            {translate(
+                                                                "startDate"
+                                                            )}
+                                                            :
                                                         </span>{" "}
                                                         {rental.startDate}
                                                     </p>
                                                     <p className="text-gray-700">
                                                         <span className="font-semibold">
-                                                            End Date:
+                                                            {translate(
+                                                                "endDate"
+                                                            )}
+                                                            :
                                                         </span>{" "}
                                                         {rental.endDate}
                                                     </p>
                                                     <p className="text-gray-700">
                                                         <span className="font-semibold">
-                                                            Total Price:
+                                                            {translate(
+                                                                "totalPrice"
+                                                            )}
+                                                            :
                                                         </span>{" "}
-                                                        ${rental.totalPrice}
+                                                        {formatCurrency(
+                                                            rental.totalPrice
+                                                        )}
                                                     </p>
                                                 </li>
                                             ))}
@@ -783,7 +1098,7 @@ const Profile = () => {
                             <div className="space-y-6">
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4">
-                                        Preferred Vehicles
+                                        {translate("preferredVehicles")}
                                     </h3>
                                     <div className="space-y-3">
                                         {preferredCars.length > 0 ? (
@@ -798,50 +1113,69 @@ const Profile = () => {
                                             ))
                                         ) : (
                                             <p className="text-gray-500">
-                                                No booking history available
+                                                {translate("noBookings")}
                                             </p>
                                         )}
                                     </div>
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4">
-                                        Notification Preferences
+                                        {translate("notificationPreferences")}
                                     </h3>
-                                    <div className="space-y-3">
-                                        <label className="flex items-center space-x-3 cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox text-emerald-600"
-                                                checked={
-                                                    editedData.emailNotifications
-                                                }
-                                                onChange={(e) => {
-                                                    handlePreferencesChange(
-                                                        "emailNotifications",
-                                                        e.target.checked
-                                                    );
-                                                    setPreferencesChanged(true);
-                                                }}
-                                            />
-                                            <span>Email notifications</span>
-                                        </label>
-                                        <label className="flex items-center space-x-3 cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox text-emerald-600"
-                                                checked={
-                                                    editedData.smsNotifications
-                                                }
-                                                onChange={(e) => {
-                                                    handlePreferencesChange(
-                                                        "smsNotifications",
-                                                        e.target.checked
-                                                    );
-                                                    setPreferencesChanged(true);
-                                                }}
-                                            />
-                                            <span>SMS notifications</span>
-                                        </label>
+                                    <div className="space-y-4">
+                                        {/* Email Notifications Toggle */}
+                                        <div className="flex items-center justify-between">
+                                            <span>
+                                                {translate(
+                                                    "emailNotifications"
+                                                )}
+                                            </span>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="sr-only peer"
+                                                    checked={
+                                                        editedData.emailNotifications
+                                                    }
+                                                    onChange={(e) => {
+                                                        handlePreferencesChange(
+                                                            "emailNotifications",
+                                                            e.target.checked
+                                                        );
+                                                        setPreferencesChanged(
+                                                            true
+                                                        );
+                                                    }}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                                            </label>
+                                        </div>
+
+                                        {/* SMS Notifications Toggle */}
+                                        <div className="flex items-center justify-between">
+                                            <span>
+                                                {translate("smsNotifications")}
+                                            </span>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="sr-only peer"
+                                                    checked={
+                                                        editedData.smsNotifications
+                                                    }
+                                                    onChange={(e) => {
+                                                        handlePreferencesChange(
+                                                            "smsNotifications",
+                                                            e.target.checked
+                                                        );
+                                                        setPreferencesChanged(
+                                                            true
+                                                        );
+                                                    }}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 {preferencesChanged && (
@@ -851,7 +1185,9 @@ const Profile = () => {
                                             className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
                                         >
                                             <FaSave />
-                                            <span>Save Changes</span>
+                                            <span>
+                                                {translate("saveChanges")}
+                                            </span>
                                         </button>
                                     </div>
                                 )}
@@ -862,13 +1198,13 @@ const Profile = () => {
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h3 className="text-lg font-semibold">
-                                        Saved Payment Methods
+                                        {translate("savedPaymentMethods")}
                                     </h3>
                                     <button
                                         onClick={() => setShowAddPayment(true)}
                                         className="text-emerald-600 hover:text-emerald-700"
                                     >
-                                        Add New
+                                        {translate("addNew")}
                                     </button>
                                 </div>
 
@@ -881,7 +1217,9 @@ const Profile = () => {
                                         >
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Cardholder Name
+                                                    {translate(
+                                                        "cardholderName"
+                                                    )}
                                                 </label>
                                                 <input
                                                     type="text"
@@ -904,7 +1242,7 @@ const Profile = () => {
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                    Card Number
+                                                    {translate("cardNumber")}
                                                 </label>
                                                 <input
                                                     type="text"
@@ -936,7 +1274,9 @@ const Profile = () => {
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                        Expiry Date
+                                                        {translate(
+                                                            "expiryDate"
+                                                        )}
                                                     </label>
                                                     <input
                                                         type="text"
@@ -980,7 +1320,7 @@ const Profile = () => {
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                        CVV
+                                                        {translate("cvv")}
                                                     </label>
                                                     <input
                                                         type="text"
@@ -1016,13 +1356,13 @@ const Profile = () => {
                                                     }
                                                     className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                                                 >
-                                                    Cancel
+                                                    {translate("cancel")}
                                                 </button>
                                                 <button
                                                     type="submit"
                                                     className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
                                                 >
-                                                    Add Payment Method
+                                                    {translate("addNew")}
                                                 </button>
                                             </div>
                                         </form>
@@ -1052,7 +1392,7 @@ const Profile = () => {
                                             <div className="flex items-center space-x-4">
                                                 {method.isDefault ? (
                                                     <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded">
-                                                        Default
+                                                        {translate("default")}
                                                     </span>
                                                 ) : (
                                                     <button
@@ -1063,7 +1403,9 @@ const Profile = () => {
                                                         }
                                                         className="text-emerald-600 hover:text-emerald-700 transition-colors"
                                                     >
-                                                        Make Default
+                                                        {translate(
+                                                            "makeDefault"
+                                                        )}
                                                     </button>
                                                 )}
                                                 <button
@@ -1073,7 +1415,7 @@ const Profile = () => {
                                                         )
                                                     }
                                                     className="text-red-600 hover:text-red-700 transition-colors ml-4"
-                                                    title="Remove payment method"
+                                                    title={translate("remove")}
                                                 >
                                                     <FaTrash />
                                                 </button>
@@ -1084,197 +1426,15 @@ const Profile = () => {
                             </div>
                         )}
 
-                        {activeTab === "settings" && (
-                            <div className="space-y-8">
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4">
-                                        Account Settings
-                                    </h3>
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-gray-700">
-                                                Dark Mode
-                                            </span>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="sr-only peer"
-                                                    checked={
-                                                        editedData.darkMode
-                                                    }
-                                                    onChange={(e) => {
-                                                        handleSettingsChange(
-                                                            "darkMode",
-                                                            e.target.checked
-                                                        );
-                                                        setSettingsChanged(
-                                                            true
-                                                        );
-                                                    }}
-                                                />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                                            </label>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Language
-                                            </label>
-                                            <select
-                                                value={editedData.language}
-                                                onChange={(e) => {
-                                                    handleSettingsChange(
-                                                        "language",
-                                                        e.target.value
-                                                    );
-                                                    setSettingsChanged(true);
-                                                }}
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                                            >
-                                                <option value="english">
-                                                    English
-                                                </option>
-                                                <option value="spanish">
-                                                    Spanish
-                                                </option>
-                                                <option value="french">
-                                                    French
-                                                </option>
-                                                <option value="german">
-                                                    German
-                                                </option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Currency
-                                            </label>
-                                            <select
-                                                value={editedData.currency}
-                                                onChange={(e) => {
-                                                    handleSettingsChange(
-                                                        "currency",
-                                                        e.target.value
-                                                    );
-                                                    setSettingsChanged(true);
-                                                }}
-                                                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                                            >
-                                                <option value="usd">
-                                                    USD ($)
-                                                </option>
-                                                <option value="eur">
-                                                    EUR (€)
-                                                </option>
-                                                <option value="gbp">
-                                                    GBP (£)
-                                                </option>
-                                                <option value="jpy">
-                                                    JPY (¥)
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Privacy Settings */}
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4">
-                                        Privacy Settings
-                                    </h3>
-                                    <div className="space-y-4">
-                                        <label className="flex items-center space-x-3 cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox text-emerald-600"
-                                                checked={
-                                                    editedData.profileVisibility ||
-                                                    false
-                                                }
-                                                onChange={(e) => {
-                                                    handleSettingsChange(
-                                                        "profileVisibility",
-                                                        e.target.checked
-                                                    );
-                                                    setSettingsChanged(true);
-                                                }}
-                                            />
-                                            <span>
-                                                Make profile visible to other
-                                                users
-                                            </span>
-                                        </label>
-                                        <label className="flex items-center space-x-3 cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox text-emerald-600"
-                                                checked={
-                                                    editedData.activityStatus ||
-                                                    false
-                                                }
-                                                onChange={(e) => {
-                                                    handleSettingsChange(
-                                                        "activityStatus",
-                                                        e.target.checked
-                                                    );
-                                                    setSettingsChanged(true);
-                                                }}
-                                            />
-                                            <span>Show activity status</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                {/* Security Settings */}
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4">
-                                        Security Settings
-                                    </h3>
-                                    <div className="flex flex-col space-y-2">
-                                        <button
-                                            onClick={() =>
-                                                showNotification(
-                                                    "Password change functionality will be added soon"
-                                                )
-                                            }
-                                            className="w-76 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
-                                        >
-                                            Change Password
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                showNotification(
-                                                    "Two-factor authentication functionality will be added soon"
-                                                )
-                                            }
-                                            className="w-76 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
-                                        >
-                                            Enable Two-Factor Authentication
-                                        </button>
-                                    </div>
-                                </div>
-                                {settingsChanged && (
-                                    <div className="flex justify-end mt-6">
-                                        <button
-                                            onClick={handleSettingsSave}
-                                            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
-                                        >
-                                            <FaSave />
-                                            <span>Save Changes</span>
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                        {activeTab === "settings" && renderSettingsTab()}
                     </div>
                 </div>
             </div>
 
-            {/* Add this notification toast */}
+            {/* Fix notification toast */}
             {notificationVisible && notification && (
                 <div
-                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${
+                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[100] ${
                         notificationVisible
                             ? "translate-y-0 opacity-100"
                             : "translate-y-10 opacity-0"
@@ -1283,11 +1443,13 @@ const Profile = () => {
                     {notification}
                 </div>
             )}
+            <ChatBot />
         </div>
     );
 };
 
 export default Profile;
+
 
 
 
