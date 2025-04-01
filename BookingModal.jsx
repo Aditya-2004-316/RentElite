@@ -8,6 +8,7 @@ import {
     FaCalendarAlt,
 } from "react-icons/fa";
 import { useBookings } from "../context/BookingContext";
+import { useSettings } from "../context/SettingsContext";
 
 const BookingModal = ({
     car,
@@ -27,6 +28,7 @@ const BookingModal = ({
     );
     const [scale, setScale] = useState(1);
     const { addBooking } = useBookings();
+    const { formatCurrency } = useSettings();
 
     // Add notification states
     const [notification, setNotification] = useState(null);
@@ -64,13 +66,19 @@ const BookingModal = ({
         };
 
         onConfirm(bookingDetails);
-        showNotification("Booking confirmed successfully!");
+        showNotification(
+            `Successfully booked ${car.name} from ${new Date(
+                localStartDate
+            ).toLocaleDateString()} to ${new Date(
+                localEndDate
+            ).toLocaleDateString()}`
+        );
         onClose();
     };
 
     const handleCancelBooking = () => {
         onCancelBooking();
-        showNotification("Booking cancelled successfully!");
+        showNotification(`Booking for ${car.name} has been cancelled`);
         onClose();
     };
 
@@ -229,7 +237,7 @@ const BookingModal = ({
                     <div className="mb-6">
                         <h3 className="font-semibold mb-2">Total Price</h3>
                         <p className="text-2xl font-bold text-[#0fa16d]">
-                            ${calculatedTotalPrice}
+                            {formatCurrency(calculatedTotalPrice)}
                         </p>
                     </div>
 
@@ -261,16 +269,17 @@ const BookingModal = ({
                 </div>
             </div>
 
-            {/* Notification Toast */}
+            {/* Enhanced Notification Toast */}
             {notificationVisible && notification && (
                 <div
-                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[60] ${
+                    className={`fixed bottom-4 right-4 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[60] flex items-center space-x-2 ${
                         notificationVisible
                             ? "translate-y-0 opacity-100"
                             : "translate-y-10 opacity-0"
                     }`}
                 >
-                    {notification}
+                    <span className="text-xl">✓</span>
+                    <span>{notification}</span>
                 </div>
             )}
         </div>
@@ -278,6 +287,7 @@ const BookingModal = ({
 };
 
 export default BookingModal;
+
 
 
 
