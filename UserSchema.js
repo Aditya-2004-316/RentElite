@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -36,6 +37,14 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    resetPasswordToken: String,
+    resetPasswordExpiry: Date,
 });
 
+userSchema.methods.generatePasswordReset = function () {
+    this.resetPasswordToken = crypto.randomBytes(32).toString("hex");
+    this.resetPasswordExpiry = Date.now() + 3600000; // 1 hour
+};
+
 export default mongoose.model("UserSchema", userSchema);
+
